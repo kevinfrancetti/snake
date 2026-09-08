@@ -51,22 +51,6 @@ int main() {
 			printf("Here i read: %c \n", ch);
 		}
 
-//		time = clock();
-		//printf("time: %f \n", time);
-		//printf("last time: %f \n", last_time);
-		//printf("\e[25m");
-		//printf("\e[3m");
-		//fflush(stdout);
-		//printf("time: %f\n", time);
-//		if( (time - last_time) > dt){
-//		    printf("YOLO");
-//		    printf("\e[2A");
-//		    fflush(stdout);
-//		    last_time = time;
-//		}
-		//if(time/CLOCKS_PER_SEC > 0 && time/CLOCKS_PER_SEC <= 1) printf("1");
-		//if(time/CLOCKS_PER_SEC > 1&& time/CLOCKS_PER_SEC <= 2) printf("2");
-		//if(time/CLOCKS_PER_SEC > 2&& time/CLOCKS_PER_SEC <= 3) printf("3");
 	}
 
 	set_terminal_canonical_mode();
