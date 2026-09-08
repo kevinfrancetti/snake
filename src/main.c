@@ -11,13 +11,8 @@ void set_terminal_non_canonical_mode();
 void set_terminal_canonical_mode();
 
 int main() {
-	double clock_time = clock();
-	time_t old_time = time(NULL);
-
-	double last_time = clock_time;
-	double dt = 2 * CLOCKS_PER_SEC;
-
-	printf("Hi: %f \n", clock_time);
+	time_t start_time = time(NULL);
+	double diff_time = 0;
 
 	// 1. Preparo un array con un solo elemento (stdin)
 	struct pollfd fds[1];
@@ -29,22 +24,18 @@ int main() {
 
 	print_some_shit();
 
-	while (clock_time / CLOCKS_PER_SEC < 10.1) {
+	while (diff_time < 5) {
 
-		int ret = poll(fds, 1, 0);
-//		printf("ret: %d\n", ret);
+		int ret = poll(fds, 1, 1000);
 
-		clock_time = clock();
-//		printf("clock_time: %f\n", clock_time);
-//
-//		time_t new_time = time(NULL);
-//		double diff = difftime(new_time, old_time);
-//		printf("real time: %f\n", diff);
+		time_t last_time = time(NULL);
+		diff_time = difftime(last_time, start_time);
+		printf("ret: %d\n", ret);
 
 		if (ret == 0) {
-//			printf("Timeout\n");
+			printf("Timeout\n");
 		} else if (ret == -1) {
-//			printf("Error\n");
+			printf("Error\n");
 		} else {
 			char ch;
 			read(STDIN_FILENO, &ch, 1);
@@ -54,11 +45,7 @@ int main() {
 	}
 
 	set_terminal_canonical_mode();
-
-	time_t new_time = time(NULL);
-	double diff = difftime(new_time, old_time);
-	printf("real time: %f\n", diff);
-	printf("Hi: %f \n", clock_time);
+	printf("time: %f\n", diff_time);
 	return 0;
 }
 
