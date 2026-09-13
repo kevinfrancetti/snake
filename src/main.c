@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <termios.h>
 #include <poll.h>
+#include "logic.h"
+#include "render.h"
+#include "render_interface.h"
 
 //struct termios oldt, newt;
 
@@ -11,8 +14,6 @@ void set_terminal_non_canonical_mode();
 void set_terminal_canonical_mode();
 
 int main() {
-	time_t start_time = time(NULL);
-	double diff_time = 0;
 
 	// 1. Preparo un array con un solo elemento (stdin)
 	struct pollfd fds[1];
@@ -24,28 +25,47 @@ int main() {
 
 	print_some_shit();
 
-	while (diff_time < 5) {
+	RenderAPI render;
+	render.draw_cell = draw_at;
+	render.clean_screen = terminal_clean_screen;
+
+	//printf("\e[2J");
+	render.clean_screen();
+	fflush(stdout);
+	while (1) {
 
 		int ret = poll(fds, 1, 1000);
 
-		time_t last_time = time(NULL);
-		diff_time = difftime(last_time, start_time);
-		printf("ret: %d\n", ret);
+		fprintf(stderr, "merda\n");
+
+		fprintf(stderr, "ret: %d\n", ret);
 
 		if (ret == 0) {
-			printf("Timeout\n");
+			fprintf(stderr, "Timeout\n");
 		} else if (ret == -1) {
-			printf("Error\n");
+			fprintf(stderr, "Error\n");
 		} else {
 			char ch;
 			read(STDIN_FILENO, &ch, 1);
-			printf("Here i read: %c \n", ch);
+			fprintf(stderr, "Here i read: %c \n", ch);
+
+			if (ch == '1') {
+				render.draw_cell(1, 2, 0);
+			}
+
+			if (ch == '2') {
+				render.draw_cell(4, 7, 1);
+			}
+
+			if (ch == 'q') {
+				fprintf(stderr, "quit\n");
+				break;
+			}
 		}
 
 	}
 
 	set_terminal_canonical_mode();
-	printf("time: %f\n", diff_time);
 	return 0;
 }
 

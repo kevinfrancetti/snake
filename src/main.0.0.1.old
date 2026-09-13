@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+#include <termios.h>
+
+
+//struct termios oldt, newt;
+
+void print_some_shit();
+void set_terminal_non_canonical_mode();
+void set_terminal_canonical_mode();
+
+
+int main(){
+	double time = clock();
+	double last_time = time;
+	double dt = 2 * CLOCKS_PER_SEC;
+
+	printf("Hi: %f \n", time);
+	
+	
+	set_terminal_non_canonical_mode();
+
+
+	
+	print_some_shit();
+
+
+	while(time/CLOCKS_PER_SEC < 10.1){
+		time = clock();
+		//printf("time: %f \n", time);
+		//printf("last time: %f \n", last_time);
+		//printf("\e[25m");
+		//printf("\e[3m");
+		//fflush(stdout);
+		//printf("time: %f\n", time);
+		if( (time - last_time) > dt){
+		    printf("YOLO");
+		    printf("\e[2A");
+		    fflush(stdout);
+		    last_time = time;
+		}
+		//if(time/CLOCKS_PER_SEC > 0 && time/CLOCKS_PER_SEC <= 1) printf("1");
+		//if(time/CLOCKS_PER_SEC > 1&& time/CLOCKS_PER_SEC <= 2) printf("2");
+		//if(time/CLOCKS_PER_SEC > 2&& time/CLOCKS_PER_SEC <= 3) printf("3");
+	}
+
+	set_terminal_canonical_mode();
+
+	printf("Hi: %f \n", time);
+	return 0;
+}
+
+
+void set_terminal_non_canonical_mode(){
+	struct termios terminal;
+	tcgetattr(STDIN_FILENO, &terminal);
+	terminal.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
+}
+
+
+void set_terminal_canonical_mode(){
+	struct termios terminal;
+	tcgetattr(STDIN_FILENO, &terminal);
+	terminal.c_lflag |= (ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
+}
+
+void print_some_shit(){
+	int row, col, n;
+
+	for (row = 0; row < 11; row++) {
+		for (col = 0; col < 10; col++) {
+			n = 10 * row + col;
+	    	if (n > 109) break;
+	    	printf("\033[%dm %3d\033[m", n, n);
+		}
+	}	
+	printf("\n");
+}
