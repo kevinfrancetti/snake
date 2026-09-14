@@ -5,8 +5,8 @@
  *      Author: bomber
  */
 
-#ifndef INCLUDE_RENDER_INTERFACE_H_
-#define INCLUDE_RENDER_INTERFACE_H_
+#ifndef INCLUDE_RENDER_API_H_
+#define INCLUDE_RENDER_API_H_
 
 
 typedef struct {
@@ -18,4 +18,4 @@ typedef struct {
 } RenderAPI;
 
 
-#endif /* INCLUDE_RENDER_INTERFACE_H_ */
+#endif /* INCLUDE_RENDER_API_H_ */

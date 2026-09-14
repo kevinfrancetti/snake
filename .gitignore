@@ -1,0 +1,7 @@
+build
+.cproject
+.gdb_history
+.gitignore.swp
+.project
+.settings/
+

@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-#include <termios.h>
 #include <poll.h>
+#include "render_api.h"
+#include "render_factory.h"
 #include "logic.h"
-#include "render.h"
-#include "render_interface.h"
 
-//struct termios oldt, newt;
+
 
 void print_some_shit();
-void set_terminal_non_canonical_mode();
-void set_terminal_canonical_mode();
+
 
 int main() {
 
@@ -21,15 +19,13 @@ int main() {
 	fds[0].events = POLLIN;      // voglio sapere quando ci sono dati in lettura
 	fds[0].revents = 0;            // verrà riempito da poll()
 
-	set_terminal_non_canonical_mode();
+	//set_terminal_non_canonical_mode();
 
 	print_some_shit();
 
-	RenderAPI render;
-	render.draw_cell = draw_at;
-	render.clean_screen = terminal_clean_screen;
+	RenderAPI render = render_create(RENDER_OPENGL);
 
-	//printf("\e[2J");
+	render.init();
 	render.clean_screen();
 	fflush(stdout);
 	while (1) {
@@ -65,23 +61,10 @@ int main() {
 
 	}
 
-	set_terminal_canonical_mode();
+	render.cleanup();
 	return 0;
 }
 
-void set_terminal_non_canonical_mode() {
-	struct termios terminal;
-	tcgetattr(STDIN_FILENO, &terminal);
-	terminal.c_lflag &= ~(ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
-}
-
-void set_terminal_canonical_mode() {
-	struct termios terminal;
-	tcgetattr(STDIN_FILENO, &terminal);
-	terminal.c_lflag |= (ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
-}
 
 void print_some_shit() {
 	int row, col, n;
