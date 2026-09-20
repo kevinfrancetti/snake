@@ -8,15 +8,21 @@
 #ifndef INCLUDE_LOGIC_H_
 #define INCLUDE_LOGIC_H_
 
-#define UP 0
-#define LEFT 1
-#define DOWN 2
-#define RIGHT 3
+
+typedef enum{
+	ACTION_NONE,
+	ACTION_UP,
+	ACTION_DOWN,
+	ACTION_LEFT,
+	ACTION_RIGHT
+}ACTION_TYPE;
 
 
 
 void init();
-void update(int instruction);
+void game_update(ACTION_TYPE);
+int getX();
+int getY();
 
 
 typedef struct{

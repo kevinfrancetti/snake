@@ -15,16 +15,14 @@
 #define CELL_WALL 1
 
 #define CSI "\x1b["   //Control Sequence Introducer
+#define ANSI_CLEAR CSI "2J"
 
 
 
-#define ANSI_CLEAR_SCREEN printf(CSI "2J")
+//#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
 
-//void terminal_draw_at(int x, int y, int type);
-//void terminal_clean_screen(void);
-
-RenderAPI terminal_create(void);
+RenderAPI terminal_render_create(void);
 
 
 #endif /* INCLUDE_RENDER_TERM_H_ */

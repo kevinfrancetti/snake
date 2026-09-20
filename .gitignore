@@ -4,4 +4,7 @@ build
 .gitignore.swp
 .project
 .settings/
+Doxfile2
+Doxyfile
+docs/
 

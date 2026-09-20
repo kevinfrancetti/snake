@@ -12,12 +12,12 @@
 
 
 RenderAPI render_create(RENDER_TYPE type){
-	if(type == RENDER_TERMINAL) return terminal_create();
+	if(type == RENDER_TERMINAL) return terminal_render_create();
 	if(type == RENDER_OPENGL){
-		fprintf(stderr, "OPENGL NOT IMPLEMENTED, USING TERMINAL");
-		return terminal_create();
+		fprintf(stderr, "OPENGL NOT IMPLEMENTED, USING TERMINAL\n");
+		return terminal_render_create();
 	}
 
-	return terminal_create();
+	return terminal_render_create();
 
 }

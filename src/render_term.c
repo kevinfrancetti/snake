@@ -9,8 +9,8 @@
 #include <unistd.h>
 #include "render_term.h"
 
-static void terminal_draw_at(int x, int y, int type) {
-	printf("\x1b[%d;%dH", x, y);
+static void terminal_draw_at(int line, int column, int type) {
+	printf("\x1b[%d;%dH", line, column);
 	if (type == CELL_WALL) {
 		putc('#', stdout);
 	}
@@ -21,9 +21,10 @@ static void terminal_draw_at(int x, int y, int type) {
 }
 
 static void terminal_clean_screen() {
-	ANSI_CLEAR_SCREEN;
+	printf(ANSI_CLEAR);
 }
 
+//TODO MOVE THIS SHIT IN INPUT
 static void terminal_set_non_canonical_mode() {
 	struct termios terminal;
 	tcgetattr(STDIN_FILENO, &terminal);
@@ -31,6 +32,7 @@ static void terminal_set_non_canonical_mode() {
 	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
 }
 
+//TODO MOVE THIS SHIT IN INPUT
 static void terminal_set_canonical_mode() {
 	struct termios terminal;
 	tcgetattr(STDIN_FILENO, &terminal);
@@ -44,7 +46,7 @@ static void terminal_cleanup() {
 }
 
 // @formatter:off
-RenderAPI terminal_create(){
+RenderAPI terminal_render_create(){
 	RenderAPI api = {
 			.init = terminal_set_non_canonical_mode,
 			.draw_cell = terminal_draw_at,
