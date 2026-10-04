@@ -8,51 +8,54 @@
 #include <termios.h>
 #include <unistd.h>
 #include "render_term.h"
+//#include "render_styles.h"//TODO
 
-static void terminal_draw_at(int line, int column, int type) {
-	printf("\x1b[%d;%dH", line, column);
-	if (type == CELL_WALL) {
-		putc('#', stdout);
-	}
-	if (type == CELL_VOID) {
-		putc('@', stdout);
-	}
+#define CSI					"\x1b["   //Control Sequence Introducer
+#define ANSI_CLEAR			CSI "2J"
+//#define ANSI_CLEAR_SCREEN printf(CSI "2J")
+
+
+
+// @formatter:off
+const char styles[CELL_SIZE] = {
+		[RENDER_API_EMPTY]	= ' ',
+		[CELL_FOOD]			= '@',
+		[CELL_PLAYER]		= '#'
+};
+// @formatter:on
+
+static void render_init(){
+
+}
+
+
+static void render_term_draw_at(int x, int y, RENDER_API_STYLE type) {
+	fprintf(stderr, "X: %d\nY: %d", x, y);
+	printf("\x1b[%d;%dH", HEIGHT - y, x);//TODO
+
+	putc(styles[type], stdout);
+
+
 	fflush(stdout);
 }
 
-static void terminal_clean_screen() {
+static void render_term_clean_screen() {
 	printf(ANSI_CLEAR);
 }
 
-//TODO MOVE THIS SHIT IN INPUT
-static void terminal_set_non_canonical_mode() {
-	struct termios terminal;
-	tcgetattr(STDIN_FILENO, &terminal);
-	terminal.c_lflag &= ~(ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
-}
 
-//TODO MOVE THIS SHIT IN INPUT
-static void terminal_set_canonical_mode() {
-	struct termios terminal;
-	tcgetattr(STDIN_FILENO, &terminal);
-	terminal.c_lflag |= (ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
-}
-
-static void terminal_cleanup() {
-	terminal_clean_screen();
-	terminal_set_canonical_mode();
+static void render_term_cleanup() {
+	render_term_clean_screen();
 }
 
 // @formatter:off
 RenderAPI terminal_render_create(){
 	RenderAPI api = {
-			.init = terminal_set_non_canonical_mode,
-			.draw_cell = terminal_draw_at,
+			.init = render_init,
+			.draw_cell = render_term_draw_at,
 			.render_frame = NULL,
-			.cleanup = terminal_cleanup,
-			.clean_screen = terminal_clean_screen
+			.cleanup = render_term_cleanup,
+			.clean_screen = render_term_clean_screen
 	};
 	return api;
 }

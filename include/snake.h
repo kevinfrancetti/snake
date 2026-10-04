@@ -5,8 +5,11 @@
  *      Author: bomber
  */
 
-#ifndef INCLUDE_LOGIC_H_
-#define INCLUDE_LOGIC_H_
+#ifndef INCLUDE_SNAKE_H_
+#define INCLUDE_SNAKE_H_
+
+#define GAME_MAP_WIDTH	90
+#define GAME_MAP_HEIGHT	30
 
 
 typedef enum{
@@ -15,12 +18,19 @@ typedef enum{
 	ACTION_DOWN,
 	ACTION_LEFT,
 	ACTION_RIGHT
-}ACTION_TYPE;
+}SNAKE_ACTION;
+
+
+typedef enum{
+	ELEMENT_WALL,
+	ELEMENT_FOOD,
+	ELEMENT_PLAYER
+}ELEMENT_TYPE;
 
 
 
 void init();
-void game_update(ACTION_TYPE);
+void game_update(SNAKE_ACTION);
 int getX();
 int getY();
 
@@ -34,8 +44,9 @@ typedef struct{
 typedef struct{
 	int ID;
 	Position pos;
+	ELEMENT_TYPE elem_type;
 }Player;
 
 
 
-#endif /* INCLUDE_LOGIC_H_ */
+#endif /* INCLUDE_SNAKE_H_ */

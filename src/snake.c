@@ -5,13 +5,22 @@
  *      Author: bomber
  */
 
+#include <snake.h>
 #include <stdio.h>
-#include "logic.h"
 
-Player p1 = { .ID = 1, .pos = { 1, 2 } };
+// @formatter:off
+Player p1 = {
+		.ID = 1,
+		.pos = { GAME_MAP_WIDTH / 2, GAME_MAP_HEIGHT / 2 },
+		.elem_type = ELEMENT_PLAYER
+};
+// @formatter:on
 
+static void check_boundaries() {
 
-void game_update(ACTION_TYPE type) {
+}
+
+void game_update(SNAKE_ACTION type) {
 	switch (type) {
 	case ACTION_NONE:
 		return;

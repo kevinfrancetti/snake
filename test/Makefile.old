@@ -1,0 +1,38 @@
+.SUFFIXES:
+MAKEFLAGS += --no-builtin-rules
+
+
+#config
+GCC := gcc
+AR := ar
+
+#gcc -Wall -g -I../include input_term_test.c ../src/input_term.c -o test
+
+
+#Compiler flags
+INCLUDES := -I../include 
+CFLAGS := -Wall -MMD $(INCLUDES) -g -c
+
+
+#Linker flags
+LDLIBS := 
+LDFLAGS := 
+
+
+PROG_NAME := input_term_test
+
+
+#.PHONY: input_test
+
+#$(PROG_NAME): test_input
+
+$(PROG_NAME): input_term_test.o ../build/obj/input_term.o
+	$(GCC) $^ -o $@
+	
+input_term_test.o: input_term_test.c
+	$(GCC) $(CFLAGS) $< -o $@
+	
+	
+.PHONY: clean
+clean:
+	rm input_term_test input_term_test.d input_term_test.o

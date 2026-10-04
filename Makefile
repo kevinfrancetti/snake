@@ -59,21 +59,6 @@ clean:
 	rm  $(objs) $(STATIC_LIB_NAME) $(deps) $(PROGRAM_NAME) test/maintest maintest.o
 	
 	
-	
-	
-#====Some test
-.PHONY: test
-#test: CFLAGS += -g
-test: test/maintest
-
-test/maintest: maintest.o
-	$(GCC) $< -o $@
-
-maintest.o: test/maintest.c
-	$(GCC) $(CFLAGS) $< -o $@
-#=====
-
-
 print:
 	@echo "srcs:$(srcs)"
 	@echo "objs:$(objs)"

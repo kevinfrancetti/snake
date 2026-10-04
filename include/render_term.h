@@ -1,6 +1,10 @@
 /*
  * render.h
  *
+ *
+ * This code only works if terminal is in raw mode.
+ *
+ *
  *  Created on: Sep 13, 2026
  *      Author: bomber
  */
@@ -10,16 +14,9 @@
 
 #include "render_api.h"
 
+#define HEIGHT	30
+#define WIDTH	90
 
-#define CELL_VOID 0
-#define CELL_WALL 1
-
-#define CSI "\x1b["   //Control Sequence Introducer
-#define ANSI_CLEAR CSI "2J"
-
-
-
-//#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
 
 RenderAPI terminal_render_create(void);

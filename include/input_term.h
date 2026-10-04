@@ -11,6 +11,11 @@
 #include "input_api.h"
 
 
+
+
+
+void hi();
+
 InputApi input_term_create(void);
 
 

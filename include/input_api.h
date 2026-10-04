@@ -11,18 +11,20 @@
 
 
 typedef enum{
-	KEY_NONE,
-	KEY_QUIT,
-	KEY_UP,
-	KEY_DOWN,
-	KEY_LEFT,
-	KEY_RIGHT
-}Key;
+	KEY_API_NONE,
+	KEY_API_QUIT,
+	KEY_API_UP,
+	KEY_API_DOWN,
+	KEY_API_LEFT,
+	KEY_API_RIGHT
+}INPUT_KEY_API;
 
 
 
 typedef struct{
-	Key (*get_key)(void);
+	INPUT_KEY_API (*get_key)(void);
+	void (*init)(void);
+	void (*restore)(void);
 	//bool (*should_quit)(void);
 }InputApi;
 
