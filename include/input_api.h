@@ -1,4 +1,4 @@
-/*
+	/*
  * inputi_api.h
  *
  *  Created on: Sep 17, 2026
@@ -9,16 +9,16 @@
 #define INCLUDE_INPUT_API_H_
 
 
-
+// @formatter:off
 typedef enum{
 	KEY_API_NONE,
-	KEY_API_QUIT,
-	KEY_API_UP,
-	KEY_API_DOWN,
-	KEY_API_LEFT,
-	KEY_API_RIGHT
+	KEY_API_q,
+	KEY_API_w,
+	KEY_API_s,
+	KEY_API_a,
+	KEY_API_d
 }INPUT_KEY_API;
-
+// @formatter:on
 
 
 typedef struct{

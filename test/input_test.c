@@ -6,8 +6,8 @@
  */
 
 
+#include <input_term_native.h>
 #include <stdio.h>
-#include "input_term.h"
 
 
 int main(){

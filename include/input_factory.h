@@ -18,7 +18,7 @@ typedef enum{
 }INPUT_TYPE;
 
 
-InputApi input_create(INPUT_TYPE);
+InputApi input_factory_create(INPUT_TYPE);
 
 
 #endif /* INCLUDE_INPUT_FACTORY_H_ */

@@ -1,6 +1,8 @@
 /*
  * keybindings.h
  *
+ * binds the key from the API to the snake commands for the logic
+ *
  *  Created on: Sep 17, 2026
  *      Author: bomber
  */
@@ -12,7 +14,7 @@
 #include "input_api.h"
 
 
-extern const SNAKE_ACTION snake_key_bindings[];
+extern const SNAKE_CMD snake_key_bindings[];
 
 
 

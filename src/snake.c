@@ -20,20 +20,20 @@ static void check_boundaries() {
 
 }
 
-void game_update(SNAKE_ACTION type) {
+void game_update(SNAKE_CMD type) {
 	switch (type) {
-	case ACTION_NONE:
+	case SNK_CMD_NONE:
 		return;
-	case ACTION_LEFT:
+	case SNK_CMD_LEFT:
 		p1.pos.x--;
 		break;
-	case ACTION_RIGHT:
+	case SNK_CMD_RIGHT:
 		p1.pos.x++;
 		break;
-	case ACTION_UP:
+	case SNK_CMD_UP:
 		p1.pos.y++;
 		break;
-	case ACTION_DOWN:
+	case SNK_CMD_DOWN:
 		p1.pos.y--;
 		break;
 		break;

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
+//#include <ioctl.h>
 #include "render_term.h"
 //#include "render_styles.h"//TODO
 

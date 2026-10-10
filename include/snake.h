@@ -13,12 +13,12 @@
 
 
 typedef enum{
-	ACTION_NONE,
-	ACTION_UP,
-	ACTION_DOWN,
-	ACTION_LEFT,
-	ACTION_RIGHT
-}SNAKE_ACTION;
+	SNK_CMD_NONE,
+	SNK_CMD_UP,
+	SNK_CMD_DOWN,
+	SNK_CMD_LEFT,
+	SNK_CMD_RIGHT
+}SNAKE_CMD;
 
 
 typedef enum{
@@ -30,7 +30,7 @@ typedef enum{
 
 
 void init();
-void game_update(SNAKE_ACTION);
+void game_update(SNAKE_CMD);
 int getX();
 int getY();
 

@@ -2,12 +2,14 @@
 #include <time.h>
 #include <unistd.h>
 #include <poll.h>
-#include <snake.h>
-#include <snake_key_bindings.h>
+#include "snake.h"
+#include "snake_key_bindings.h"
 #include "render_api.h"
 #include "render_factory.h"
 #include "input_api.h"
 #include "input_factory.h"
+
+#include "render_term_native.h"
 
 void print_some_shit();
 
@@ -22,7 +24,7 @@ int main() {
 	print_some_shit();
 
 	RenderAPI render = render_create(RENDER_OPENGL);
-	InputApi input = input_create(INPUT_TERMINAL);
+	InputApi input = input_factory_create(INPUT_TERMINAL);
 
 	render.init();
 	input.init();
@@ -44,11 +46,16 @@ int main() {
 
 			INPUT_KEY_API key = input.get_key();
 
-			SNAKE_ACTION action = snake_key_bindings[key];
+			SNAKE_CMD action = snake_key_bindings[key];
 			game_update(action);
-
+			//char chars[] = {'A','B'};
+			//char* text = "La merda";
+			//write(STDIN_FILENO, text, 8);
+			int x = getX();
+			int y =  getY();
 			fprintf(stderr, "x = %d\n", getX());
 			fprintf(stderr, "y = %d\n", getY());
+			render_term_native_draw(x,y, 'R');
 			render.draw_cell(getX(), getY(), CELL_PLAYER);
 
 			if (i++ > 5){
@@ -59,7 +66,7 @@ int main() {
 			}
 
 
-			if (key == KEY_API_QUIT) {
+			if (key == KEY_API_q) {//quit
 				fprintf(stderr, "quit\n");
 				break;
 			}
