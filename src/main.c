@@ -2,14 +2,15 @@
 #include <time.h>
 #include <unistd.h>
 #include <poll.h>
+
 #include "snake.h"
 #include "snake_key_bindings.h"
+
 #include "render_api.h"
 #include "render_factory.h"
+
 #include "input_api.h"
 #include "input_factory.h"
-
-#include "render_term_native.h"
 
 void print_some_shit();
 
@@ -23,12 +24,12 @@ int main() {
 
 	print_some_shit();
 
-	RenderAPI render = render_create(RENDER_OPENGL);
+	RenderAPI render2 = render_create2(RENDER_TERMINAL);
 	InputApi input = input_factory_create(INPUT_TERMINAL);
 
-	render.init();
+	render2.init();
 	input.init();
-	render.clean_screen();
+	render2.clean_screen();
 	fflush(stdout);
 	int i = 0;
 	int j = 0;
@@ -48,18 +49,16 @@ int main() {
 
 			SNAKE_CMD action = snake_key_bindings[key];
 			game_update(action);
-			//char chars[] = {'A','B'};
-			//char* text = "La merda";
-			//write(STDIN_FILENO, text, 8);
+
 			int x = getX();
 			int y =  getY();
 			fprintf(stderr, "x = %d\n", getX());
 			fprintf(stderr, "y = %d\n", getY());
-			render_term_native_draw(x,y, 'R');
-			render.draw_cell(getX(), getY(), CELL_PLAYER);
+
+			render2.draw_cell(x, y, SHAPE_CIRCLE);
 
 			if (i++ > 5){
-				render.draw_cell(54+j, 17, CELL_FOOD);
+				render2.draw_cell(54+j, 17, SHAPE_CROSS);
 				fprintf(stderr, "j: %d\n", j);
 				j++;
 				i = 0;
@@ -74,7 +73,7 @@ int main() {
 
 	}
 
-	//render.cleanup();
+	//render2.cleanup();
 	input.restore();
 	return 0;
 }

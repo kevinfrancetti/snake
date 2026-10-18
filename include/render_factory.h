@@ -19,6 +19,7 @@
 
 
 RenderAPI render_create(RENDER_TYPE);
+RenderAPI render_create2(RENDER_TYPE);
 
 
 #endif /* INCLUDE_RENDER_FACTORY_H_ */

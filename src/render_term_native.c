@@ -11,50 +11,39 @@
 #include <stdint.h>
 //#include <ioctl.h>
 #include "render_term_native.h"
-//#include "render_styles.h"//TODO
+
+
+#define KB 1024
+#define MB (1024 * KB)
+#define GB (1024 * MB)
 
 #define CSI					"\x1b["   //Control Sequence Introducer
 #define ANSI_CLEAR			CSI "2J"
 //#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
-typedef struct {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-} NativeTermColor;
 
-typedef struct {
-	int row;
-	int col;
-} NativeTermCursorPos;
 
-typedef struct {
-	NativeTermCursorPos pos;
-	NativeTermColor 	color;
-	char 				c;
-} NativeTermContext;
-
-static NativeTermContext g_term_ctx; //terminal context
+static NativeTermCell term_cell; //terminal cell testing
 
 void render_term_native_set_char(char c) {
-	g_term_ctx.c = c;
+	term_cell.c = c;
 }
 
 void render_term_native_set_pos(int row, int col) {
-	g_term_ctx.pos.row = row;
-	g_term_ctx.pos.col = col;
+	term_cell.pos.row = row;
+	term_cell.pos.col = col;
 }
 
 void render_term_native_set_rgb(uint8_t r, uint8_t g, uint8_t b) {
-	g_term_ctx.color.r = r;
-	g_term_ctx.color.g = g;
-	g_term_ctx.color.b = b;
+	term_cell.colorfg.r = r;
+	term_cell.colorfg.g = g;
+	term_cell.colorfg.b = b;
 }
 
 void render_term_native_render(void) {
-	NativeTermCursorPos p = g_term_ctx.pos;
-	NativeTermColor color = g_term_ctx.color;
-	char c = g_term_ctx.c;
+	NativeTermCursorPos p = term_cell.pos;
+	NativeTermColor color = term_cell.colorfg;
+	char c = term_cell.c;
 	char buffer[100];
 
 	//printf("\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c", p.row, p.col, color.r, color.g,
@@ -63,23 +52,28 @@ void render_term_native_render(void) {
 	int ret = snprintf(buffer, 100,"\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c", p.row, p.col, color.r, color.g,
 			color.b, c );
 	write(STDOUT_FILENO, buffer, ret);
-	fprintf(stderr, "ret=%d\n", ret);
+	fprintf(stderr, "dbg: [file: %s] [line: %d] [func: %s] ret: %d\n",__FILE__, __LINE__, __func__, ret);
 
 }
 
-static void render_term_native_init() {
+
+void render_term_native_render_buffer(char *buff, int size){
+	write(STDOUT_FILENO, buff, size );
+}
+
+void render_term_native_init() {
 
 }
 
 //"\x1b[%d;%dH"
-void render_term_native_draw(int x, int y, char c) {
+void render_term_native_draw_cell(int x, int y, char c) {
 	char memory[100] = { 0 };
-	snprintf(memory, 20, "\x1b[%d;%dH%c", x, y, c);
-	write(STDOUT_FILENO, memory, 20);
+	int ret = snprintf(memory, 20, "\x1b[%d;%dH%c", NATIVE_SCREEN_HEIGHT-y, x, c);
+	write(STDOUT_FILENO, memory, ret);
 
 }
 
-static void render_term_native_clean_screen() {
+void render_term_native_clean_screen() {
 	printf(ANSI_CLEAR);
 }
 

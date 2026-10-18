@@ -12,13 +12,15 @@ typedef enum{
 	RENDER_API_EMPTY,
 	CELL_FOOD,
 	CELL_PLAYER,
-	CELL_SIZE
-}RENDER_API_STYLE;
+	CELL_SIZE,
+	SHAPE_CIRCLE,
+	SHAPE_CROSS
+}RENDER_API_SHAPE;
 
 
 typedef struct {
     void (*init)(void);
-    void (*draw_cell)(int x, int y, RENDER_API_STYLE type); // type = 0 empty, 1 food, 2 snake
+    void (*draw_cell)(int x, int y, RENDER_API_SHAPE type); // type = 0 empty, 1 food, 2 snake
     void (*render_frame)(void);  // aggiorna lo schermo
     void (*cleanup)(void);
     void (*clean_screen)(void);

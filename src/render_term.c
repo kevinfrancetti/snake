@@ -30,7 +30,7 @@ static void render_init(){
 }
 
 
-static void render_term_draw_at(int x, int y, RENDER_API_STYLE type) {
+static void render_term_draw_at(int x, int y, RENDER_API_SHAPE type) {
 	fprintf(stderr, "X: %d\nY: %d", x, y);
 	printf("\x1b[%d;%dH", HEIGHT - y, x);//TODO
 

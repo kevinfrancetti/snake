@@ -7,6 +7,10 @@ TEST_RENDER_TERM := test_render
 TEST_RENDER_TERM_NATIVE := test_render_native
 
 
+.PHONY: all
+
+all: $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE)
+
 $(TEST_INPUT_TERM):
 	gcc -Wall -g -I../include input_test.c ../src/input_term.c -o $@
 	
