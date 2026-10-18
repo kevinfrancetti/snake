@@ -24,12 +24,12 @@ int main() {
 
 	print_some_shit();
 
-	RenderAPI render2 = render_create2(RENDER_TERMINAL);
+	RenderAPI render = render_create(RENDER_TERMINAL);
 	InputApi input = input_factory_create(INPUT_TERMINAL);
 
-	render2.init();
+	render.init();
 	input.init();
-	render2.clean_screen();
+	render.clean_screen();
 	fflush(stdout);
 	int i = 0;
 	int j = 0;
@@ -55,10 +55,10 @@ int main() {
 			fprintf(stderr, "x = %d\n", getX());
 			fprintf(stderr, "y = %d\n", getY());
 
-			render2.draw_cell(x, y, SHAPE_CIRCLE);
+			render.draw_cell(x, y, SHAPE_CIRCLE);
 
 			if (i++ > 5){
-				render2.draw_cell(54+j, 17, SHAPE_CROSS);
+				render.draw_cell(54+j, 17, SHAPE_CROSS);
 				fprintf(stderr, "j: %d\n", j);
 				j++;
 				i = 0;
