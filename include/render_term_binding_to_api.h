@@ -11,7 +11,7 @@
 #include "render_api.h"
 
 
-extern const char render_term_bindings_to_api[];
+//extern const char render_term_bindings_to_api[];
 
 RenderAPI render_term_binding_create_api(void);
 

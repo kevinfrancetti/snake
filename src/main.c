@@ -12,6 +12,9 @@
 #include "input_api.h"
 #include "input_factory.h"
 
+//#define DEBUG_ON
+#include "debug.h"
+
 void print_some_shit();
 
 int main() {
@@ -52,9 +55,10 @@ int main() {
 
 			int x = getX();
 			int y =  getY();
-			fprintf(stderr, "x = %d\n", getX());
-			fprintf(stderr, "y = %d\n", getY());
-
+			//fprintf(stderr, "x = %d\n", getX());
+			//fprintf(stderr, "y = %d\n", getY());
+			DEBUG1s1i("x = ", getX());
+			DEBUG1s1i("y = ", getY());
 			render.draw_cell(x, y, SHAPE_CIRCLE);
 
 			if (i++ > 5){
