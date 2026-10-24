@@ -8,6 +8,9 @@
 #ifndef INCLUDE_RENDER_API_H_
 #define INCLUDE_RENDER_API_H_
 
+
+#include <stdint.h>
+
 typedef enum{
 	RENDER_API_EMPTY,
 	CELL_PLAYER,
@@ -16,10 +19,27 @@ typedef enum{
 	SHAPE_CROSS
 }RENDER_API_SHAPE;
 
+typedef struct{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+}RendAPIColorRGB;
+
+typedef struct{
+	int x;
+	int y;
+}RendAPIPosition;
+
+typedef struct{
+	RendAPIPosition		pos;
+	RendAPIColorRGB		fg;
+	RendAPIColorRGB		bg;
+	RENDER_API_SHAPE	shape;
+}RendAPIDrawInstructions;
 
 typedef struct {
     void (*init)(void);
-    void (*draw_cell)(int x, int y, RENDER_API_SHAPE type);
+    void (*draw_buff)(RendAPIDrawInstructions);
     void (*render_frame)(void);  // aggiorna lo schermo
     void (*cleanup)(void);
     void (*clean_screen)(void);

@@ -15,7 +15,6 @@
 //#define DEBUG_ON
 #include "debug.h"
 
-void print_some_shit();
 
 int main() {
 
@@ -25,7 +24,6 @@ int main() {
 	fds[0].events = POLLIN;      // voglio sapere quando ci sono dati in lettura
 	fds[0].revents = 0;            // verrà riempito da poll()
 
-	print_some_shit();
 
 	RenderAPI render = render_create(RENDER_TERMINAL);
 	InputApi input = input_factory_create(INPUT_TERMINAL);
@@ -54,19 +52,24 @@ int main() {
 			game_update(action);
 
 			int x = getX();
-			int y =  getY();
-			//fprintf(stderr, "x = %d\n", getX());
-			//fprintf(stderr, "y = %d\n", getY());
+			int y = getY();
+
 			DEBUG1s1i("x = ", getX());
 			DEBUG1s1i("y = ", getY());
-			render.draw_cell(x, y, SHAPE_CIRCLE);
 
-			if (i++ > 5){
-				render.draw_cell(54+j, 17, SHAPE_CROSS);
-				fprintf(stderr, "j: %d\n", j);
-				j++;
-				i = 0;
-			}
+
+			//some test for the render
+			RendAPIDrawInstructions apiInfo;
+			apiInfo.pos.x	= x;
+			apiInfo.pos.y	= y;
+			apiInfo.fg		= (RendAPIColorRGB) {.r = 24, .g = 34, .b = 255};
+			apiInfo.bg		= (RendAPIColorRGB) {.r = 255, .g = 34, .b = 255};
+			apiInfo.shape	= SHAPE_CIRCLE;
+
+			render.draw_buff(apiInfo);
+			render.render_frame();
+
+
 
 
 			if (key == KEY_API_q) {//quit
@@ -82,15 +85,3 @@ int main() {
 	return 0;
 }
 
-void print_some_shit() {
-	int row, col, n;
-	for (row = 0; row < 11; row++) {
-		for (col = 0; col < 10; col++) {
-			n = 10 * row + col;
-			if (n > 109)
-				break;
-			printf("\033[%dm %3d\033[m", n, n);
-		}
-	}
-	printf("\n");
-}

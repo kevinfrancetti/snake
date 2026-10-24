@@ -11,6 +11,6 @@
 
 
 int main(){
-	hi();
+
 	printf("dbg: [file: %s] [line: %d] [func: %s]\n",  __FILE__, __LINE__, __func__);
 }

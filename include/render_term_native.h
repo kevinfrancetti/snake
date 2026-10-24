@@ -27,8 +27,8 @@ typedef struct {
 
 typedef struct {
 	NativeTermCursorPos pos;
-	NativeTermColor 	colorfg;
-	NativeTermColor 	colorbg;
+	NativeTermColor 	fg;
+	NativeTermColor 	bg;
 	char 				c;
 } NativeTermCell;
 
@@ -37,18 +37,15 @@ typedef struct{
 	int				len;//number of elements already in the buffer
 }NativeTermContext;
 
+//rtn := render term native
+void rtn_init(void);
+void rtn_clean_screen(void);
 
-void render_term_native_init(void);
-void render_term_native_draw_cell(int raw, int col, char c);
-void render_term_native_render(void);
-
-void render_term_native_render_buffer(char *buff, int size);
-void render_term_native_clean_screen(void);
-
-void rtn_push(NativeTermContext* ctx, NativeTermCell* cell);
+void rtn_draw_buff(NativeTermContext* ctx, NativeTermCell* cell);
 void rtn_render(NativeTermContext* ctx);
 void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb);
+void rtn_reset_buffer(NativeTermContext* ctx);
 
 #endif /* INCLUDE_RENDER_TERM_NATIVE_H_ */

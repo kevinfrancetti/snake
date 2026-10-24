@@ -1,6 +1,8 @@
 .SUFFIXES:
 MAKEFLAGS += --no-builtin-rules
 
+CFLAGS := -Wall -g -D DEBUG_ON
+
 #output file names
 TEST_INPUT_TERM			:= test_input
 TEST_RENDER_TERM_NATIVE	:= test_render_native
@@ -29,15 +31,15 @@ RENDER_API_FILES	:= $(RENDER_NATIVE_FILES) 	\
 
 
 $(TEST_INPUT_TERM): $(INPUT_TERM_FILES)
-	gcc -Wall -g -I../include $^ -o $@
+	gcc $(CFLAGS) -I../include $^ -o $@
 	
 	
 $(TEST_RENDER_TERM_NATIVE): $(MAIN_RENDER_TERM_NATIVE) $(RENDER_NATIVE_FILES)
-	gcc -Wall -g -I../include $^ -o $@
+	gcc $(CFLAGS) -I../include $^ -o $@
 	
 	
 $(TEST_RENDER_API): $(MAIN_RENDER_API) $(RENDER_API_FILES)
-	gcc -Wall -g -I../include $^ -o $@
+	gcc $(CFLAGS) -I../include $^ -o $@
 	
 	
 	

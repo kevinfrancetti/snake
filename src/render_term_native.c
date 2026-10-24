@@ -12,6 +12,8 @@
 //#include <ioctl.h>
 #include "render_term_native.h"
 
+#include "debug.h"
+
 #define KB 1024
 #define MB (1024 * KB)
 #define GB (1024 * MB)
@@ -20,85 +22,67 @@
 #define ANSI_CLEAR			CSI "2J"
 //#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
-static NativeTermCell term_cell = { 0 }; //terminal cell testing TODO
+static NativeTermCell term_cell = { 0 }; //TODO delete
 
 typedef struct {
-	char buff[128 * KB];
+	char buff[256 * KB];
 	int len;
 } ScreenBuffer;
 
 
-static ScreenBuffer screen_buff = { 0 };
+static ScreenBuffer scrn_buff = { 0 }; //screen buffer of chars
 
 void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb){
 
-	cell->c			= c;
-	cell->pos		= (NativeTermCursorPos)	{row, col};
-	cell->colorfg	= (NativeTermColor)		{fr, fg, fb} ;
-	cell->colorbg	= (NativeTermColor)		{br, bg, bb} ;
+	cell->c		= c;
+	cell->pos	= (NativeTermCursorPos)	{row, col};
+	cell->fg	= (NativeTermColor)		{fr, fg, fb} ;
+	cell->bg	= (NativeTermColor)		{br, bg, bb} ;
 }
 
-void rtn_push(NativeTermContext* ctx, NativeTermCell* cell){
+void rtn_draw_buff(NativeTermContext* ctx, NativeTermCell* cell){
 	if(ctx->len >= REND_NAT_MAX_CELLS){
-		printf("Too big\n");
+		DEBUG1s1i("Too big", 666);
 		return;
 	}
 	ctx->buffer[ctx->len++] = *cell;
 }
 
-void rtn_render(NativeTermContext* ctx){
-	for (int i = 0; i < REND_NAT_MAX_CELLS; i++) {
-			NativeTermCell cell = ctx->buffer[i];
-
-			screen_buff.len += snprintf(screen_buff.buff + screen_buff.len, sizeof(screen_buff.buff) - screen_buff.len,
-					"\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c", cell.pos.row, cell.pos.col,
-					cell.colorfg.r, cell.colorfg.g, cell.colorfg.b, cell.c);
-			//printf("ctx.len:%d\n", ctx.len);
-		}
-		render_term_native_render_buffer(screen_buff.buff, screen_buff.len);
-}
-
-
-
-void render_term_native_render(void) {
-	NativeTermCursorPos p = term_cell.pos;
-	NativeTermColor color = term_cell.colorfg;
-	char c = term_cell.c;
-	char buffer[100];
-
-	//printf("\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c", p.row, p.col, color.r, color.g,
-	//		color.b, c);
-
-	int ret = snprintf(buffer, 100, "\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c", p.row,
-			p.col, color.r, color.g, color.b, c);
-	write(STDOUT_FILENO, buffer, ret);
-	fprintf(stderr, "dbg: [file: %s] [line: %d] [func: %s] ret: %d\n", __FILE__,
-	__LINE__, __func__, ret);
-
-}
-
-void render_term_native_render_buffer(char *buff, int size) {
+static void render_term_native_render_buffer(char *buff, int size) {
 	write(STDOUT_FILENO, buff, size);
 }
 
-void render_term_native_draw_cell(int raw, int col, char c) {
-	char memory[100] = { 0 };
-	int ret = snprintf(memory, 20, "\x1b[%d;%dH%c", col, raw, c);
-	write(STDOUT_FILENO, memory, ret);
+void rtn_render(NativeTermContext* ctx){
+	scrn_buff.len = 0;
+	for (int i = 0; i < ctx->len; i++) {
+			NativeTermCell c = ctx->buffer[i];
+
+			scrn_buff.len += snprintf(scrn_buff.buff + scrn_buff.len, sizeof(scrn_buff.buff) - scrn_buff.len,
+					"\x1b[%d;%dH\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm%c", c.pos.row, c.pos.col,
+					c.fg.r, c.fg.g, c.fg.b, c.bg.r, c.bg.g, c.bg.b, c.c);
+		}
+		render_term_native_render_buffer(scrn_buff.buff, scrn_buff.len);
+}
+
+void rtn_reset_buffer(NativeTermContext* ctx){
+	ctx->len = 0;
+}
+
+
+
+
+
+void rtn_init() {
 
 }
 
-void render_term_native_init() {
-
-}
-
-void render_term_native_clean_screen() {
+void rtn_clean_screen() {
 	printf(ANSI_CLEAR);
 }
 
 static void render_term_native_cleanup() {
-	render_term_native_clean_screen();
+	rtn_clean_screen();
 }
 

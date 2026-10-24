@@ -23,7 +23,6 @@ void input_term_set_raw_mode();
 void input_term_set_canonical_mode();
 RAW_KEY input_term_native_get_key();
 
-void hi();
 
 //InputApi input_term_create(void);
 

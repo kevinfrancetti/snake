@@ -19,10 +19,6 @@
 #define INPUT_TERM_q		'q'
 
 
-void hi(){
-	printf("dbg:\n%s\n%d\n%s\n",  __FILE__, __LINE__, __func__);
-}
-
 /**
  * Some explanations
  *

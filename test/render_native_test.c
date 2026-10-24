@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "render_term_native.h"
 
 #define  DEBUG_ON
@@ -16,6 +17,7 @@
 
 int main() {
 
+	/*
 	char buff[100 * 1024];
 
 	int ret = snprintf(buff + 1, 10, "ANO");
@@ -29,19 +31,29 @@ int main() {
 	printf("a: %d\n", a);
 
 	printf("hi\n");
-
+	*/
 	NativeTermContext ctx =  { 0 };
 	NativeTermCell cell;
 
-	rtn_set_cell(&cell, 'R', 4, 5, 255, 0, 0, 0, 0, 0);
 
-	rtn_push(&ctx, &cell);
-	rtn_set_cell(&cell, 'R', 4, 6, 100, 100, 0, 0, 0, 0);
-
-	rtn_push(&ctx, &cell);
+	rtn_set_cell(&cell, 'R', 14, 15, 163, 200, 100, 240, 255, 100);
+	rtn_draw_buff(&ctx, &cell);
+	rtn_render(&ctx);
+	rtn_reset_buffer(&ctx);
+	rtn_set_cell(&cell, 'R', 4, 6, 100, 100, 0, 0, 0, 255);
+	rtn_draw_buff(&ctx, &cell);
 	rtn_render(&ctx);
 
+	srand(1);
 
+	rtn_reset_buffer(&ctx);
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 90; j++) {
+			rtn_set_cell(&cell, 33+rand()%94 ,i , j, rand()%256, rand()%256, rand()%256, rand()%256, rand()%256, rand()%256);
+			rtn_draw_buff(&ctx, &cell);
+		}
+	}
+	rtn_render(&ctx);
 
 	/*
 	 *
