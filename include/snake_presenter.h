@@ -12,7 +12,8 @@
 #include "snake.h"
 #include "render_api.h"
 
-
+void snk_pres_init(RenderAPI* rend, SNK_GAME_STATE* state);
+void snk_pres_render_state();
 //void snake_presenter()
 
 

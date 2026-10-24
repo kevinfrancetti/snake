@@ -24,16 +24,10 @@ typedef enum{
 typedef enum{
 	ELEMENT_WALL,
 	ELEMENT_FOOD,
+	ELEMENT_SNK_HEAD,
+	ELEMENT_SNK_BODY,
 	ELEMENT_PLAYER
 }ELEMENT_TYPE;
-
-
-
-void init();
-void game_update(SNAKE_CMD);
-int getX();
-int getY();
-
 
 typedef struct{
 	int x;
@@ -42,10 +36,34 @@ typedef struct{
 
 
 typedef struct{
-	int ID;
-	Position pos;
-	ELEMENT_TYPE elem_type;
-}Player;
+	int				ID;
+	Position		pos;
+	ELEMENT_TYPE 	elem_type;
+}Element;
+
+typedef struct{
+	Element			components[100];
+	int				size;
+}SNAKE;
+
+typedef struct{
+	int				width;
+	int				height;
+	int				snk_size;
+	int				map_size;
+	SNAKE			snake;
+	Element			map_of_stuff[100];
+}SNK_GAME_STATE;
+
+
+void snake_game_init(void);
+void game_update(SNAKE_CMD);
+SNK_GAME_STATE* snake_game_get_state(void);
+int getX(void);
+int getY(void);
+
+
+
 
 
 

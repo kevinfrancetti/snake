@@ -30,6 +30,8 @@ int main() {
 
 	render.init();
 	input.init();
+	snake_game_init();
+	snk_pres_init(&render, snake_game_get_state());
 	render.clean_screen();
 	fflush(stdout);
 	int i = 0;
@@ -50,24 +52,12 @@ int main() {
 
 			SNAKE_CMD action = snake_key_bindings[key];
 			game_update(action);
-
-			int x = getX();
-			int y = getY();
+			snk_pres_render_state();
 
 			DEBUG1s1i("x = ", getX());
 			DEBUG1s1i("y = ", getY());
 
 
-			//some test for the render
-			RendAPIDrawInstructions apiInfo;
-			apiInfo.pos.x	= x;
-			apiInfo.pos.y	= y;
-			apiInfo.fg		= (RendAPIColorRGB) {.r = 24, .g = 34, .b = 255};
-			apiInfo.bg		= (RendAPIColorRGB) {.r = 255, .g = 34, .b = 255};
-			apiInfo.shape	= SHAPE_CIRCLE;
-
-			render.draw_buff(apiInfo);
-			render.render_frame();
 
 
 

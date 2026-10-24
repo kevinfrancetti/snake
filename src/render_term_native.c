@@ -22,7 +22,6 @@
 #define ANSI_CLEAR			CSI "2J"
 //#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
-static NativeTermCell term_cell = { 0 }; //TODO delete
 
 typedef struct {
 	char buff[256 * KB];
@@ -69,9 +68,6 @@ void rtn_render(NativeTermContext* ctx){
 void rtn_reset_buffer(NativeTermContext* ctx){
 	ctx->len = 0;
 }
-
-
-
 
 
 void rtn_init() {
