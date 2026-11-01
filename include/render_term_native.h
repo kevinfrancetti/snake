@@ -47,5 +47,6 @@ void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb);
 void rtn_reset_buffer(NativeTermContext* ctx);
+void rtn_reset_screen(void);
 
 #endif /* INCLUDE_RENDER_TERM_NATIVE_H_ */

@@ -5,6 +5,7 @@
 
 #include "snake.h"
 #include "snake_key_bindings.h"
+#include "snake_presenter.h"
 
 #include "render_api.h"
 #include "render_factory.h"
@@ -30,13 +31,14 @@ int main() {
 
 	render.init();
 	input.init();
-	snake_game_init();
-	snk_pres_init(&render, snake_game_get_state());
 	render.clean_screen();
-	fflush(stdout);
-	int i = 0;
-	int j = 0;
+
+	snk_game_init();
+	snk_pres_init(&render, snk_game_get_state());
+
+
 	while (1) {
+
 
 		int ret = poll(fds, 1, 1000);
 
@@ -44,18 +46,18 @@ int main() {
 
 		if (ret == 0) {
 			fprintf(stderr, "Timeout\n");
+			snk_game_update(SNK_CMD_NONE);
+			snk_pres_render_state();
 		} else if (ret == -1) {
 			fprintf(stderr, "Error\n");
 		} else {
 
 			INPUT_KEY_API key = input.get_key();
-
+			//SNAKE_CMD cmd = SNK_CMD_RIGHT;
 			SNAKE_CMD action = snake_key_bindings[key];
-			game_update(action);
+			snk_game_update(action);
 			snk_pres_render_state();
 
-			DEBUG1s1i("x = ", getX());
-			DEBUG1s1i("y = ", getY());
 
 
 

@@ -12,7 +12,9 @@
 
 const char render_term_bindings_to_api[] = {
 		[SHAPE_CIRCLE]	= 'O',
-		[SHAPE_CROSS]	= 'X'
+		[SHAPE_CROSS]	= 'X',
+		[SHAPE_HASH]	= '#',
+		[SHAPE_VOID]	= ' '
 };
 
 

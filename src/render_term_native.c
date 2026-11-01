@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <stdint.h>
 //#include <ioctl.h>
 #include "render_term_native.h"
@@ -20,6 +19,7 @@
 
 #define CSI					"\x1b["   //Control Sequence Introducer
 #define ANSI_CLEAR			CSI "2J"
+#define ANSI_RESET			CSI "0m"
 //#define ANSI_CLEAR_SCREEN printf(CSI "2J")
 
 
@@ -63,6 +63,7 @@ void rtn_render(NativeTermContext* ctx){
 					c.fg.r, c.fg.g, c.fg.b, c.bg.r, c.bg.g, c.bg.b, c.c);
 		}
 		render_term_native_render_buffer(scrn_buff.buff, scrn_buff.len);
+		rtn_reset_screen();
 }
 
 void rtn_reset_buffer(NativeTermContext* ctx){
@@ -74,8 +75,12 @@ void rtn_init() {
 
 }
 
+void rtn_reset_screen() {
+	write(STDOUT_FILENO, ANSI_RESET, sizeof(ANSI_RESET)-1);
+}
+
 void rtn_clean_screen() {
-	printf(ANSI_CLEAR);
+	write(STDOUT_FILENO, ANSI_CLEAR, sizeof(ANSI_CLEAR)-1);
 }
 
 static void render_term_native_cleanup() {
