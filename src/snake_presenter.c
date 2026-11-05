@@ -7,10 +7,12 @@
 
 #include "snake_presenter.h"
 
+//SP := Snake Presenter
 #define SP_RGB(red, green, blue)	{ .r = red, .g = green, .b = blue }
 
-#define WORLD_BG_BG			SP_RGB(0, 100, 100)
 
+//Colors
+#define WORLD_BG_BG			SP_RGB(0, 100, 100)
 #define WORLD_BG_EDGE 		SP_RGB(255, 0, 255)
 #define WORLD_FG_EDGE		SP_RGB(0, 255, 0)
 
@@ -18,14 +20,22 @@ static RenderAPI *render;
 static SNK_GAME_STATE *snk_game_state;
 
 typedef struct {
-	Element body[100];
+	Element buff[100];
 	int len;
 } DrawMemory;
 
 static DrawMemory g_memory;
 static DrawMemory next;
 
-void snk_pres_first_draw() {
+static void snk_pres_first_draw(void);
+
+void snk_pres_init(RenderAPI *rend, SNK_GAME_STATE *state) {
+	render = rend;
+	snk_game_state = state;
+	snk_pres_first_draw();
+}
+
+static void snk_pres_first_draw() {
 	RendAPIDrawInstructions cell;
 
 	for (int y = 1; y < snk_game_state->height; y++) {
@@ -47,19 +57,15 @@ void snk_pres_first_draw() {
 	render->render_frame();
 }
 
-void snk_pres_init(RenderAPI *rend, SNK_GAME_STATE *state) {
-	render = rend;
-	snk_game_state = state;
-	snk_pres_first_draw();
-}
+
 
 void clear_old_drawn() {
 	RendAPIDrawInstructions cellclear;
 
 	for (int i = 0; i < g_memory.len; i++) {
-		cellclear.pos.x = g_memory.body[i].pos.x;
-		cellclear.pos.y = g_memory.body[i].pos.y;
-		cellclear.fg = (RendAPIColorRGB ) { .r = 0, .g = 0, .b = 0 };
+		cellclear.pos.x = g_memory.buff[i].pos.x;
+		cellclear.pos.y = g_memory.buff[i].pos.y;
+		cellclear.fg = (RendAPIColorRGB ) { .r = 0, .g = 0, .b = 0 };//TODO probably can remove this line
 		cellclear.bg = (RendAPIColorRGB ) WORLD_BG_BG;
 		cellclear.shape = SHAPE_VOID;
 		render->draw_buff(cellclear);
@@ -68,12 +74,12 @@ void clear_old_drawn() {
 }
 
 void snk_pres_render_state() {
-	Element head = snk_game_state->snk.body[0];
+	Element head = snk_game_state->snk.parts[0];
 	Element food = snk_game_state->food;
 
 	clear_old_drawn();
 
-	g_memory.body[0] = head;
+	g_memory.buff[0] = head;
 	g_memory.len = 1;
 	//g_memory.elements[1] = head;
 	for (int i = 1; i < snk_game_state->snk.len; i++) {

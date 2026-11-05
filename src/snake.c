@@ -10,91 +10,105 @@
 #include "snake.h"
 #include "debug.h"
 
+
+SNK_GAME_STATE	gs;
 Element*		p_snk_head;
-SNK_GAME_STATE	state;
+Snake*			p_snk;
+
+//Testing
+Snk2*			p_snk2;
+int*			p_head;
+
 
 
 void snk_game_init() {
 	srand(2);
-	state.snk.head				= 0;
-	state.snk.tail				= 0;
-	state.snk.len				= 1;
+	p_snk					= &gs.snk;
+	gs.snk.head				= 0;
+	gs.snk.tail				= 0;
+	gs.snk.len				= 1;
+	p_snk_head				= &gs.snk.parts[gs.snk.head];
 
-	p_snk_head					= &state.snk.body[state.snk.head];
+	/*
+	p_snk2							= &gamestate.snk2;
+	p_snk2->head					= 0;
+	p_snk2->tail					= 0;
+	p_snk2->len						= 1;
 
-	p_snk_head->pos.x			= 5;
-	p_snk_head->pos.y			= 5;
-	p_snk_head->elem_type		= ELEMENT_SNK_HEAD;
+	p_snk2->body[p_snk2->head].x 	= 6;
+	p_snk2->body[p_snk2->head].y 	= 6;
+	p_snk2->type					= ELEMENT_SNK;
+	*/
+
+	p_snk_head->pos.x		= 5;
+	p_snk_head->pos.y		= 5;
+	p_snk_head->elem_type	= ELEMENT_SNK_PART;
 
 
-	state.snk.direction			= SNK_RIGHT;
+	gs.snk.direction		= SNK_RIGHT;
 
-	state.height				= GAME_MAP_HEIGHT;
-	state.width					= GAME_MAP_WIDTH;
+	gs.height				= GAME_MAP_HEIGHT;
+	gs.width				= GAME_MAP_WIDTH;
 
-	state.food.pos.x			= rand()%GAME_MAP_WIDTH;
-	state.food.pos.y			= rand()%GAME_MAP_HEIGHT;
-	state.food.elem_type		= ELEMENT_FOOD;
+	gs.food.pos.x			= rand()%GAME_MAP_WIDTH;
+	gs.food.pos.y			= rand()%GAME_MAP_HEIGHT;
+	gs.food.elem_type		= ELEMENT_FOOD;
 }
 
-void test(){
-
-}
-
-void snk_update2(SNAKE_CMD type){
-	Element futurehead = state.snk.body[state.snk.head];
-
+void test_update(Snake* snake, SNAKE_CMD cmd){
 
 	// @formatter:off
-	if(type == SNK_CMD_NONE){
-		switch(state.snk.direction){
-		case SNK_UP:	type = SNK_CMD_UP; break;
-		case SNK_DOWN:	type = SNK_CMD_DOWN; break;
-		case SNK_LEFT:	type = SNK_CMD_LEFT; break;
-		case SNK_RIGHT:	type = SNK_CMD_RIGHT; break;
+	if(cmd == SNK_CMD_NONE){
+		switch(snake->direction){
+		case SNK_UP:	cmd = SNK_CMD_UP; break;
+		case SNK_DOWN:	cmd = SNK_CMD_DOWN; break;
+		case SNK_LEFT:	cmd = SNK_CMD_LEFT; break;
+		case SNK_RIGHT:	cmd = SNK_CMD_RIGHT; break;
 		}
 	}
 	// @formatter:on
 
+	int x = snake->parts[snake->head].pos.x;
+	int y = snake->parts[snake->head].pos.y;
 
-	switch (type) {
+	Position p;
+	switch (cmd) {
 
 	case SNK_CMD_LEFT:
-		state.snk.direction = SNK_LEFT;
-		futurehead.pos.x--;
+		snake->direction = SNK_LEFT;
+		p.x = x - 1;
+		p.y = y;
+
 		break;
 	case SNK_CMD_RIGHT:
-		state.snk.direction = SNK_RIGHT;
-		futurehead.pos.x++;
+		gs.snk.direction = SNK_RIGHT;
+
+
 		break;
 	case SNK_CMD_UP:
-		state.snk.direction = SNK_UP;
-		futurehead.pos.y++;
+		gs.snk.direction = SNK_UP;
+
+
 		break;
 	case SNK_CMD_DOWN:
-		state.snk.direction = SNK_DOWN;
-		futurehead.pos.y--;
+		gs.snk.direction = SNK_DOWN;
+
+
 		break;
 	default:
 		fprintf(stderr, "switch case default\n");
 		break;
 	}
 
-	//TODO remove all this shit and this shit function
-	state.snk.body[state.snk.head].elem_type = ELEMENT_SNK_BODY;//old head change type
-	state.snk.head = (state.snk.head + 1) % SNK_MAX_LEN;
-
-
-
-
-
 }
 
-void snk_game_update(SNAKE_CMD type) {
+void snk_update2(SNAKE_CMD type){
+	Element head = gs.snk.parts[gs.snk.head];
+
 
 	// @formatter:off
 	if(type == SNK_CMD_NONE){
-		switch(state.snk.direction){
+		switch(gs.snk.direction){
 		case SNK_UP:	type = SNK_CMD_UP; break;
 		case SNK_DOWN:	type = SNK_CMD_DOWN; break;
 		case SNK_LEFT:	type = SNK_CMD_LEFT; break;
@@ -103,24 +117,70 @@ void snk_game_update(SNAKE_CMD type) {
 	}
 	// @formatter:on
 
-
-
+	Position p;
 	switch (type) {
 
 	case SNK_CMD_LEFT:
-		state.snk.direction = SNK_LEFT;
+		gs.snk.direction = SNK_LEFT;
+		p.x = gs.snk.parts[gs.snk.head].pos.x - 1;
+
+
+		break;
+	case SNK_CMD_RIGHT:
+		gs.snk.direction = SNK_RIGHT;
+
+
+		break;
+	case SNK_CMD_UP:
+		gs.snk.direction = SNK_UP;
+
+
+		break;
+	case SNK_CMD_DOWN:
+		gs.snk.direction = SNK_DOWN;
+
+
+		break;
+	default:
+		fprintf(stderr, "switch case default\n");
+		break;
+	}
+
+
+
+}
+
+void snk_game_update(SNAKE_CMD cmd) {
+
+	// @formatter:off
+	if(cmd == SNK_CMD_NONE){
+		switch(gs.snk.direction){
+		case SNK_UP:	cmd = SNK_CMD_UP; break;
+		case SNK_DOWN:	cmd = SNK_CMD_DOWN; break;
+		case SNK_LEFT:	cmd = SNK_CMD_LEFT; break;
+		case SNK_RIGHT:	cmd = SNK_CMD_RIGHT; break;
+		}
+	}
+	// @formatter:on
+
+
+
+	switch (cmd) {
+
+	case SNK_CMD_LEFT:
+		gs.snk.direction = SNK_LEFT;
 		p_snk_head->pos.x--;
 		break;
 	case SNK_CMD_RIGHT:
-		state.snk.direction = SNK_RIGHT;
+		gs.snk.direction = SNK_RIGHT;
 		p_snk_head->pos.x++;
 		break;
 	case SNK_CMD_UP:
-		state.snk.direction = SNK_UP;
+		gs.snk.direction = SNK_UP;
 		p_snk_head->pos.y++;
 		break;
 	case SNK_CMD_DOWN:
-		state.snk.direction = SNK_DOWN;
+		gs.snk.direction = SNK_DOWN;
 		p_snk_head->pos.y--;
 		break;
 	default:
@@ -129,9 +189,9 @@ void snk_game_update(SNAKE_CMD type) {
 	}
 
 	//Check collision with food
-	if(p_snk_head->pos.x == state.food.pos.x && p_snk_head->pos.y == state.food.pos.y){
-		state.food.pos.x			= rand()%GAME_MAP_WIDTH;
-		state.food.pos.y			= rand()%GAME_MAP_HEIGHT;
+	if(p_snk_head->pos.x == gs.food.pos.x && p_snk_head->pos.y == gs.food.pos.y){
+		gs.food.pos.x			= rand()%GAME_MAP_WIDTH;
+		gs.food.pos.y			= rand()%GAME_MAP_HEIGHT;
 	}
 
 
@@ -140,7 +200,7 @@ void snk_game_update(SNAKE_CMD type) {
 }
 
 SNK_GAME_STATE* snk_game_get_state(void){
-	return &state;
+	return &gs;
 }
 
 

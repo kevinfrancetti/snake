@@ -12,9 +12,6 @@
 #include <stdint.h>
 
 typedef enum{
-	RENDER_API_EMPTY,
-	CELL_PLAYER,
-	CELL_SIZE,
 	SHAPE_VOID,
 	SHAPE_CIRCLE,
 	SHAPE_CROSS,

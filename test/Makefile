@@ -1,23 +1,29 @@
 .SUFFIXES:
 MAKEFLAGS += --no-builtin-rules
 
+
+#NO DEBS IN THIS MAKEFILE, IM LAZY, REMEMBER .h ARE NOT UPDATED AUTOMATICALY
+
 CFLAGS := -Wall -g -D DEBUG_ON
 
 #output file names
 TEST_INPUT_TERM			:= test_input
 TEST_RENDER_TERM_NATIVE	:= test_render_native
 TEST_RENDER_API			:= test_render_api
+TEST_GENERIC			:= test_generic
 
-OUTPUT_FILES_TO_CLEAN := $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE) $(TEST_RENDER_API)
+OUTPUT_FILES_TO_CLEAN := $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE)\
+						 $(TEST_RENDER_API) $(TEST_GENERIC)
 
-#input main file names
+#input main files names
 MAIN_INPUT_TERM			:= input_test.c
 MAIN_RENDER_TERM_NATIVE	:= render_native_test.c
 MAIN_RENDER_API			:= render_api_test.c
+MAIN_GENERIC			:= generic_test.c
 
 .PHONY: all
 
-all: $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE) $(TEST_RENDER_API)
+all: $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE) $(TEST_RENDER_API) $(TEST_GENERIC)
 
 
 
@@ -42,6 +48,8 @@ $(TEST_RENDER_API): $(MAIN_RENDER_API) $(RENDER_API_FILES)
 	gcc $(CFLAGS) -I../include $^ -o $@
 	
 	
+$(TEST_GENERIC): $(MAIN_GENERIC)
+	gcc $(CFLAGS) -I../include $^ -o $@
 	
 .PHONY: clean
 

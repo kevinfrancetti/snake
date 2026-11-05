@@ -10,6 +10,7 @@
 
 #define GAME_MAP_WIDTH	90
 #define GAME_MAP_HEIGHT	30
+
 #define SNK_MAX_LEN		100
 
 
@@ -31,8 +32,8 @@ typedef enum{
 typedef enum{
 	ELEMENT_WALL,
 	ELEMENT_FOOD,
-	ELEMENT_SNK_HEAD,
-	ELEMENT_SNK_BODY,
+	ELEMENT_SNK_PART,
+	ELEMENT_SNK,
 	ELEMENT_PLAYER
 }ELEMENT_TYPE;
 
@@ -43,23 +44,34 @@ typedef struct{
 
 
 typedef struct{
-	int				ID;
 	Position		pos;
 	ELEMENT_TYPE 	elem_type;
 }Element;
 
 typedef struct{
-	Element			body[SNK_MAX_LEN];
+	Element			parts[SNK_MAX_LEN];
 	int				head;
 	int				len;
 	int				tail;
 	SNK_DIRECTION	direction;
+	ELEMENT_TYPE	type;
 }Snake;
+
+typedef struct{
+	Position		body[SNK_MAX_LEN];
+	int				head;
+	int				len;
+	int				tail;
+	SNK_DIRECTION	direction;
+	ELEMENT_TYPE	type;
+}Snk2;
+
 
 typedef struct{
 	int				width;
 	int				height;
 	Snake			snk;
+	Snk2			snk2;
 	//Element			map_of_stuff[100];
 	Element			food;
 }SNK_GAME_STATE;
