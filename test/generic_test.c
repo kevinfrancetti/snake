@@ -6,14 +6,10 @@
  */
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "debug.h"
 
-#define SIZE 3
-
-
-
-
-
+#define SIZE 4
 
 typedef struct {
 	int x;
@@ -62,7 +58,17 @@ void push(CyclicBuff *cb, Position p) {
 }
 
 Position pop(CyclicBuff *cb) {
-	Position p = cb->buff[cb->tail];
+	Position p;
+	if(cb->len == 0){
+		DEBUG1s1i("buff empty", 0);
+		return (Position) {-1,-1};
+	}
+	if(cb->len == 1){
+		p = cb->buff[cb->tail];
+		cb->len--;
+		return (Position) {-1,-1};
+	}
+	p = cb->buff[cb->tail];
 	cb->tail = (cb->tail + 1) % SIZE;
 	cb->len--;
 	return p;
@@ -70,13 +76,27 @@ Position pop(CyclicBuff *cb) {
 
 //for snake
 void move(CyclicBuff *cb, Position p){
-	push(cb, p);
-	pop(cb);
+	cb->head = (cb->head + 1) % SIZE;
+	cb->buff[cb->head] = p;
+	cb->tail = (cb->tail + 1) % SIZE;
 }
 
 int main() {
 	CyclicBuff cb = create_cyclicBuff();
 	Position p = { .x = 5, .y = 1 };
+
+	for(int i = 0; i < 2; i++){
+		push(&cb, p);
+		move(&cb, (Position) {1,2});
+		if(i >= 0){
+			for(int j = 0; j < 5; j++){
+				pop(&cb);
+			}
+		}
+	}
+	move(&cb, (Position) {1,2});
+	printf("HERE!\n");
+	pop(&cb);
 	push(&cb, p);
 	p.x = 22;
 	p.y = 99;

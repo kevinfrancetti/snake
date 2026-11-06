@@ -7,23 +7,123 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "snake.h"
 #include "debug.h"
 
 
 SNK_GAME_STATE	gs;
 Element*		p_snk_head;
-Snake*			p_snk;
 
-//Testing
-Snk2*			p_snk2;
-int*			p_head;
 
+SNK_GAME_STATE snk_init(){
+	// @formatter:off
+	SNK_GAME_STATE gamestate = {
+			.width	= GAME_MAP_WIDTH,
+			.height	= GAME_MAP_HEIGHT,
+			.snk2	= {
+					.head	= 0,
+					.tail	= 0,
+					.len	= 0,
+					.direction = SNK_RIGHT,
+					.type	= ELEMENT_SNK
+			},
+	};
+	// @formatter:on
+	return gamestate;
+}
+
+
+static bool push(Snk2 *snake, Position *newhead){
+	if(snake->len >= SNK_MAX_LEN){
+		DEBUG1s1i("snake buff full", 0);
+		return false;
+	}
+	if(snake->len == 0){
+		snake->body[snake->head] = *newhead;
+		snake->len++;
+		return true;
+	}
+	snake->head = (snake->head + 1) % SNK_MAX_LEN;
+	snake->len++;
+	return false;
+}
+
+static bool pop(Snk2 *snake, Position *newhead){
+	if(snake->len == 0){
+		DEBUG1s1i("snake buff empty", 0);
+		return false;
+	}
+	if(snake->len == 1){
+		*newhead = snake->body[snake->tail];
+		snake->len--;
+		return true;
+	}
+	*newhead = snake->body[snake->tail];
+	snake->tail= (snake->tail + 1) % SNK_MAX_LEN;
+	snake->len--;
+	return false;
+}
+
+//return the last position so it's easy for the presenter to remove the cell
+Position move(Snk2 *snake, Position *newhead){
+	if(snake->len == 0) {
+		return (Position) {-1, -1};
+	}
+
+	Position lasttail = snake->body[snake->tail];
+	snake->head = (snake->head + 1) % SNK_MAX_LEN;
+	snake->body[snake->head] = *newhead;
+	snake->tail= (snake->tail + 1) % SNK_MAX_LEN;
+	return lasttail;
+}
+
+void snk_update(SNK_GAME_STATE gamestate, SNAKE_CMD cmd){
+	Snk2 *snake = &gamestate.snk2;
+
+	// @formatter:off
+	if(cmd == SNK_CMD_NONE){
+		switch(snake->direction){
+		case SNK_UP:	cmd = SNK_CMD_UP; break;
+		case SNK_DOWN:	cmd = SNK_CMD_DOWN; break;
+		case SNK_LEFT:	cmd = SNK_CMD_LEFT; break;
+		case SNK_RIGHT:	cmd = SNK_CMD_RIGHT; break;
+		}
+	}
+	// @formatter:on
+
+	Position headpos = snake->body[snake->head];
+
+	switch (cmd) {
+
+	case SNK_CMD_LEFT:
+		snake->direction = SNK_LEFT;
+		headpos.x -= 1;
+		break;
+	case SNK_CMD_RIGHT:
+		snake->direction = SNK_RIGHT;
+		headpos.x += 1;
+		break;
+	case SNK_CMD_UP:
+		snake->direction = SNK_UP;
+		headpos.y += 1;
+		break;
+	case SNK_CMD_DOWN:
+		snake->direction = SNK_DOWN;
+		headpos.y -= 1;
+		break;
+	default:
+		fprintf(stderr, "switch case default\n");
+		break;
+	}
+
+	move(snake, &headpos);
+
+}
 
 
 void snk_game_init() {
 	srand(2);
-	p_snk					= &gs.snk;
 	gs.snk.head				= 0;
 	gs.snk.tail				= 0;
 	gs.snk.len				= 1;
@@ -195,7 +295,7 @@ void snk_game_update(SNAKE_CMD cmd) {
 	}
 
 
-	fprintf(stderr, "p1.pos.x = %d\np1.pos.yfefef = %d\n", p_snk_head->pos.x,
+	fprintf(stderr, "p1.pos.x = %d\np1.pos.y = %d\n", p_snk_head->pos.x,
 			p_snk_head->pos.y);
 }
 

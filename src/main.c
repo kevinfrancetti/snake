@@ -33,7 +33,7 @@ int main() {
 	input.init();
 	render.clean_screen();
 
-	snk_game_init();
+	snk_game_init();//OLD
 	snk_pres_init(&render, snk_game_get_state());
 
 
@@ -53,7 +53,6 @@ int main() {
 		} else {
 
 			INPUT_KEY_API key = input.get_key();
-			//SNAKE_CMD cmd = SNK_CMD_RIGHT;
 			SNAKE_CMD action = snake_key_bindings[key];
 			snk_game_update(action);
 			snk_pres_render_state();
