@@ -34,19 +34,17 @@ int main() {
 
 	SNK_GAME_STATE gamestate = snk_init();//new
 	snk_pres_new_init(&render, &gamestate);//new
-
 	while (1) {
-
 		int ret = poll(fds, 1, 1000);
 
-		fprintf(stderr, "ret: %d\n", ret);
+		DEBUG1s1i("poll return val=", ret);
 
 		if (ret == 0) {
-			fprintf(stderr, "Timeout\n");
+			DEBUG1s("timeout");
 			snk_update(&gamestate, SNK_CMD_NONE);
 			snk_pres_rend(&gamestate);
 		} else if (ret == -1) {
-			fprintf(stderr, "Error\n");
+			DEBUG1s("poll ret val=-1");
 		} else {
 
 			INPUT_KEY_API key = input.get_key();
@@ -55,8 +53,8 @@ int main() {
 			snk_update(&gamestate, cmd);
 			snk_pres_rend(&gamestate);
 
-			if (key == KEY_API_q) {//quit
-				fprintf(stderr, "quit\n");
+			if (key == KEY_API_Q) {//quit
+				DEBUG1s("quit");
 				break;
 			}
 		}

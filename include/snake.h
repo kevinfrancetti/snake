@@ -42,20 +42,10 @@ typedef struct{
 	int y;
 }Position;
 
-
 typedef struct{
 	Position		pos;
 	ELEMENT_TYPE 	elem_type;
 }Element;
-
-typedef struct{
-	Element			parts[SNK_MAX_LEN];
-	int				head;
-	int				len;
-	int				tail;
-	SNK_DIRECTION	direction;
-	ELEMENT_TYPE	type;
-}Snake;
 
 typedef struct{
 	Position		body[SNK_MAX_LEN];
@@ -66,11 +56,9 @@ typedef struct{
 	ELEMENT_TYPE	type;
 }Snk2;
 
-
 typedef struct{
 	int				width;
 	int				height;
-	Snake			snk;
 	Snk2			snk2;
 	//Element			map_of_stuff[100];
 	Element			food;
@@ -78,13 +66,6 @@ typedef struct{
 
 SNK_GAME_STATE snk_init(void);//new
 void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd);//new
-void snk_game_init(void);//old
-void snk_game_update(SNAKE_CMD);//old
-SNK_GAME_STATE* snk_game_get_state(void);//old
-
-
-
-
 
 
 #endif /* INCLUDE_SNAKE_H_ */

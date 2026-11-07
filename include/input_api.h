@@ -12,11 +12,11 @@
 // @formatter:off
 typedef enum{
 	KEY_API_NONE,
-	KEY_API_q,
-	KEY_API_w,
-	KEY_API_s,
-	KEY_API_a,
-	KEY_API_d
+	KEY_API_Q,
+	KEY_API_W,
+	KEY_API_S,
+	KEY_API_A,
+	KEY_API_D
 }INPUT_KEY_API;
 // @formatter:on
 

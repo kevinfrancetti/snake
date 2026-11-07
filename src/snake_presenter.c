@@ -21,7 +21,8 @@ static RenderAPI *render;
 typedef enum{
 	CELL_HEAD,
 	CELL_BODY,
-	CELL_WALL
+	CELL_WALL,
+	CELL_FOOD
 }PRESENTER_CELL_TYPE;
 
 static void snk_pres_new_first_draw(SNK_GAME_STATE *state){
@@ -62,7 +63,12 @@ static void set_cell_style(RendAPIDrawInstructions *cell, PRESENTER_CELL_TYPE ty
 	case CELL_BODY:
 		cell->fg = (RendAPIColorRGB ) { .r = 24, .g = 34, .b = 255 };
 		cell->bg = (RendAPIColorRGB ) { .r = 255, .g = 150, .b = 0 };
-		cell->shape = SHAPE_CIRCLE;
+		cell->shape = SHAPE_HASH;
+		break;
+	case CELL_FOOD:
+		cell->fg = (RendAPIColorRGB ) { .r = 24, .g = 34, .b = 255 };
+		cell->bg = (RendAPIColorRGB ) { .r = 255, .g = 150, .b = 0 };
+		cell->shape = SHAPE_HASH;
 		break;
 	}
 
@@ -75,6 +81,9 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	int len = snake->len;
 
 	RendAPIDrawInstructions cell;
+
+
+
 	cell.pos.x = snake->body[tail].x;
 	cell.pos.y = snake->body[tail].y;
 
@@ -93,6 +102,8 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 		}
 		render->draw_buff(cell);
 	}
+
+
 
 	render->render_frame();
 

@@ -10,13 +10,14 @@
 #include <unistd.h>
 #include <termios.h>
 #include "input_term_native.h"
+#include "debug.h"
 
 
-#define INPUT_TERM_w		'w'
-#define INPUT_TERM_s		's'
-#define INPUT_TERM_a		'a'
-#define INPUT_TERM_d		'd'
-#define INPUT_TERM_q		'q'
+#define INPUT_TERM_W		'w'
+#define INPUT_TERM_S		's'
+#define INPUT_TERM_A		'a'
+#define INPUT_TERM_D		'd'
+#define INPUT_TERM_Q		'q'
 
 
 /**
@@ -40,15 +41,15 @@ void input_term_set_canonical_mode(){
 RAW_KEY input_term_native_get_key() {
 	char ch;
 	read(STDIN_FILENO, &ch, 1);
-	fprintf(stderr, "term_get_key(): %c \n", ch);
+	DEBUG1s1c("key = ", ch);
 
 	// @formatter:off
 	switch (ch) {
-		case INPUT_TERM_w:	return RAW_w;
-		case INPUT_TERM_s:	return RAW_s;
-		case INPUT_TERM_a:	return RAW_a;
-		case INPUT_TERM_d:	return RAW_d;
-		case INPUT_TERM_q:	return RAW_q;
+		case INPUT_TERM_W:	return RAW_W;
+		case INPUT_TERM_S:	return RAW_S;
+		case INPUT_TERM_A:	return RAW_A;
+		case INPUT_TERM_D:	return RAW_D;
+		case INPUT_TERM_Q:	return RAW_Q;
 		default: return RAW_UNKNOWN;
 	}
 		// @formatter:on

@@ -3,6 +3,9 @@
  *
  *  Created on: Sep 13, 2026
  *      Author: bomber
+ *
+ *      This snake game is implemented with a circular buffer. The presenter can use this
+ *      information for a better implementation.
  */
 
 #include <stdio.h>
@@ -11,23 +14,37 @@
 #include "snake.h"
 #include "debug.h"
 
-SNK_GAME_STATE snk_init(){
+SNK_GAME_STATE snk_init() {
+	srand(1);
 	// @formatter:off
 	SNK_GAME_STATE gamestate = {
 			.width	= GAME_MAP_WIDTH,
 			.height	= GAME_MAP_HEIGHT,
 			.snk2	= {
+					.body[0].x = 6,
+					.body[0].y = 6,
 					.head	= 0,
 					.tail	= 0,
 					.len	= 1,
 					.direction = SNK_RIGHT,
 					.type	= ELEMENT_SNK
 			},
+			.food = {
+					.pos = {
+							.x = rand()%GAME_MAP_WIDTH,
+							.y = rand()%GAME_MAP_HEIGHT
+					},
+					.elem_type = ELEMENT_FOOD
+			},
 	};
-	// @formatter:on
+		// @formatter:on
 	return gamestate;
 }
 
+
+/**
+ * Snake ate something
+ */
 static bool push(Snk2 *snake, Position *newhead){
 	if(snake->len >= SNK_MAX_LEN){
 		DEBUG1s1i("snake buff full", 0);
@@ -59,7 +76,13 @@ static bool pop(Snk2 *snake, Position *newhead){
 	return false;
 }
 
-//return the last position so it's easy for the presenter to remove the cell
+//
+/**
+ * Normal move (no eat) the snake and push the new head in front
+ *
+ * For the presenter:
+ * return the last position so it's easy for the presenter to remove the cell
+ */
 static Position move(Snk2 *snake, Position *newhead){
 	if(snake->len == 0) {
 		return (Position) {-1, -1};

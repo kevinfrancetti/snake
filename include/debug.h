@@ -21,13 +21,39 @@
 
 #ifdef DEBUG_ON
 
-#define DEBUG1s1i(...) do {										\
-	fprintf(stderr,"dbg: [file: %s] [line: %d] [func: %s]\n" 	\
-			"msg: %s%d\n", __FILE__, __LINE__, __func__, __VA_ARGS__);	\
-}									\
+#include <stdio.h>
+extern int debugcounter;
+
+
+
+#define DEBUG_HEADER() \
+	fprintf(stderr,"dbg #%d [file: %s] [line: %d] [func: %s]\n", \
+			++debugcounter, __FILE__, __LINE__, __func__)
+
+
+#define DEBUG1s1i(...) do {						\
+	DEBUG_HEADER();								\
+	fprintf(stderr,"msg: %s%d\n", __VA_ARGS__);	\
+}												\
 while (0)
+
+#define DEBUG1s(...) do {						\
+	DEBUG_HEADER();								\
+	fprintf(stderr,"msg: %s\n", __VA_ARGS__);	\
+}												\
+while (0)
+
+#define DEBUG1s1c(...) do {						\
+	DEBUG_HEADER();								\
+	fprintf(stderr,"msg: %s%c\n", __VA_ARGS__);	\
+}												\
+while (0)
+
 #else
+#define DEBUG_HEADER() do {} while(0)
 #define DEBUG1s1i(...) do {} while(0)
+#define DEBUG1s(...) do {} while(0)
+#define DEBUG1s1c(...) do {} while(0)
 #endif /* DEBUG_ON */
 
 #endif /* INCLUDE_DEBUG_H_ */

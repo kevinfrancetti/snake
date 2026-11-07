@@ -15,11 +15,11 @@
 // @formatter:off
 static const INPUT_KEY_API input_term_native_keys_to_api_keys[] = {
 		[RAW_UNKNOWN]	= KEY_API_NONE,
-		[RAW_w]			= KEY_API_w,
-		[RAW_a]			= KEY_API_a,
-		[RAW_s]			= KEY_API_s,
-		[RAW_d]			= KEY_API_d,
-		[RAW_q]			= KEY_API_q
+		[RAW_W]			= KEY_API_W,
+		[RAW_A]			= KEY_API_A,
+		[RAW_S]			= KEY_API_S,
+		[RAW_D]			= KEY_API_D,
+		[RAW_Q]			= KEY_API_Q
 };
 // @formatter:on
 

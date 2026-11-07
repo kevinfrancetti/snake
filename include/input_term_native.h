@@ -11,11 +11,11 @@
 // @formatter:off
 typedef enum{
 	RAW_UNKNOWN,
-	RAW_w,
-	RAW_s,
-	RAW_a,
-	RAW_d,
-	RAW_q
+	RAW_W,
+	RAW_S,
+	RAW_A,
+	RAW_D,
+	RAW_Q
 }RAW_KEY;
 // @formatter:on
 
