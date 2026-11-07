@@ -11,13 +11,6 @@
 #include "snake.h"
 #include "debug.h"
 
-
-SNK_GAME_STATE	gs;//OLD
-
-
-Element*		p_snk_head;//OLD
-
-
 SNK_GAME_STATE snk_init(){
 	// @formatter:off
 	SNK_GAME_STATE gamestate = {
@@ -122,91 +115,14 @@ void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
 
 }
 
-
-void snk_game_init() {//OLD
-	srand(2);
-	gs.snk.head				= 0;
-	gs.snk.tail				= 0;
-	gs.snk.len				= 1;
-	p_snk_head				= &gs.snk.parts[gs.snk.head];
-
-	/*
-	p_snk2							= &gamestate.snk2;
-	p_snk2->head					= 0;
-	p_snk2->tail					= 0;
-	p_snk2->len						= 1;
-
-	p_snk2->body[p_snk2->head].x 	= 6;
-	p_snk2->body[p_snk2->head].y 	= 6;
-	p_snk2->type					= ELEMENT_SNK;
-	*/
-
-	p_snk_head->pos.x		= 5;
-	p_snk_head->pos.y		= 5;
-	p_snk_head->elem_type	= ELEMENT_SNK_PART;
-
-
-	gs.snk.direction		= SNK_RIGHT;
-
-	gs.height				= GAME_MAP_HEIGHT;
-	gs.width				= GAME_MAP_WIDTH;
-
+//Check collision with food
+/*
+if(p_snk_head->pos.x == gs.food.pos.x && p_snk_head->pos.y == gs.food.pos.y){
 	gs.food.pos.x			= rand()%GAME_MAP_WIDTH;
 	gs.food.pos.y			= rand()%GAME_MAP_HEIGHT;
-	gs.food.elem_type		= ELEMENT_FOOD;
 }
+*/
 
-
-void snk_game_update(SNAKE_CMD cmd) {//OLD
-
-	// @formatter:off
-	if(cmd == SNK_CMD_NONE){
-		switch(gs.snk.direction){
-		case SNK_UP:	cmd = SNK_CMD_UP; break;
-		case SNK_DOWN:	cmd = SNK_CMD_DOWN; break;
-		case SNK_LEFT:	cmd = SNK_CMD_LEFT; break;
-		case SNK_RIGHT:	cmd = SNK_CMD_RIGHT; break;
-		}
-	}
-	// @formatter:on
-
-	switch (cmd) {
-
-	case SNK_CMD_LEFT:
-		gs.snk.direction = SNK_LEFT;
-		p_snk_head->pos.x--;
-		break;
-	case SNK_CMD_RIGHT:
-		gs.snk.direction = SNK_RIGHT;
-		p_snk_head->pos.x++;
-		break;
-	case SNK_CMD_UP:
-		gs.snk.direction = SNK_UP;
-		p_snk_head->pos.y++;
-		break;
-	case SNK_CMD_DOWN:
-		gs.snk.direction = SNK_DOWN;
-		p_snk_head->pos.y--;
-		break;
-	default:
-		fprintf(stderr, "switch case default\n");
-		break;
-	}
-
-	//Check collision with food
-	if(p_snk_head->pos.x == gs.food.pos.x && p_snk_head->pos.y == gs.food.pos.y){
-		gs.food.pos.x			= rand()%GAME_MAP_WIDTH;
-		gs.food.pos.y			= rand()%GAME_MAP_HEIGHT;
-	}
-
-
-	fprintf(stderr, "p1.pos.x = %d\np1.pos.y = %d\n", p_snk_head->pos.x,
-			p_snk_head->pos.y);
-}
-
-SNK_GAME_STATE* snk_game_get_state(void){
-	return &gs;
-}
 
 
 
