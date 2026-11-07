@@ -33,8 +33,13 @@ int main() {
 	input.init();
 	render.clean_screen();
 
-	snk_game_init();//OLD
-	snk_pres_init(&render, snk_game_get_state());
+	//snk_game_init();//OLD
+	//snk_pres_init(&render, snk_game_get_state());
+
+
+	SNK_GAME_STATE gamestate = snk_init();//new
+	snk_pres_new_init(&render, &gamestate);//new
+
 
 
 	while (1) {
@@ -46,16 +51,22 @@ int main() {
 
 		if (ret == 0) {
 			fprintf(stderr, "Timeout\n");
-			snk_game_update(SNK_CMD_NONE);
-			snk_pres_render_state();
+			//snk_game_update(SNK_CMD_NONE);//OLD
+			snk_update(&gamestate, SNK_CMD_NONE);//NEW
+			snk_pres_rend(&gamestate);//new
+			//snk_pres_render_state();OLD
 		} else if (ret == -1) {
 			fprintf(stderr, "Error\n");
 		} else {
 
 			INPUT_KEY_API key = input.get_key();
-			SNAKE_CMD action = snake_key_bindings[key];
-			snk_game_update(action);
-			snk_pres_render_state();
+			SNAKE_CMD cmd = snake_key_bindings[key];
+
+			//snk_game_update(cmd);//old
+			snk_update(&gamestate, cmd);//new
+
+			//snk_pres_render_state();//old
+			snk_pres_rend(&gamestate);//new
 
 
 

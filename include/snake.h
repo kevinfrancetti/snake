@@ -76,10 +76,11 @@ typedef struct{
 	Element			food;
 }SNK_GAME_STATE;
 
-
-void snk_game_init(void);
-void snk_game_update(SNAKE_CMD);
-SNK_GAME_STATE* snk_game_get_state(void);
+SNK_GAME_STATE snk_init(void);//new
+void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd);//new
+void snk_game_init(void);//old
+void snk_game_update(SNAKE_CMD);//old
+SNK_GAME_STATE* snk_game_get_state(void);//old
 
 
 

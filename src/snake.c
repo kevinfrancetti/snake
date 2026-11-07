@@ -12,8 +12,10 @@
 #include "debug.h"
 
 
-SNK_GAME_STATE	gs;
-Element*		p_snk_head;
+SNK_GAME_STATE	gs;//OLD
+
+
+Element*		p_snk_head;//OLD
 
 
 SNK_GAME_STATE snk_init(){
@@ -24,7 +26,7 @@ SNK_GAME_STATE snk_init(){
 			.snk2	= {
 					.head	= 0,
 					.tail	= 0,
-					.len	= 0,
+					.len	= 1,
 					.direction = SNK_RIGHT,
 					.type	= ELEMENT_SNK
 			},
@@ -32,7 +34,6 @@ SNK_GAME_STATE snk_init(){
 	// @formatter:on
 	return gamestate;
 }
-
 
 static bool push(Snk2 *snake, Position *newhead){
 	if(snake->len >= SNK_MAX_LEN){
@@ -66,7 +67,7 @@ static bool pop(Snk2 *snake, Position *newhead){
 }
 
 //return the last position so it's easy for the presenter to remove the cell
-Position move(Snk2 *snake, Position *newhead){
+static Position move(Snk2 *snake, Position *newhead){
 	if(snake->len == 0) {
 		return (Position) {-1, -1};
 	}
@@ -78,8 +79,8 @@ Position move(Snk2 *snake, Position *newhead){
 	return lasttail;
 }
 
-void snk_update(SNK_GAME_STATE gamestate, SNAKE_CMD cmd){
-	Snk2 *snake = &gamestate.snk2;
+void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
+	Snk2 *snake = &gamestate->snk2;
 
 	// @formatter:off
 	if(cmd == SNK_CMD_NONE){
@@ -92,37 +93,37 @@ void snk_update(SNK_GAME_STATE gamestate, SNAKE_CMD cmd){
 	}
 	// @formatter:on
 
-	Position headpos = snake->body[snake->head];
+	Position snakehead = snake->body[snake->head];
 
 	switch (cmd) {
 
 	case SNK_CMD_LEFT:
 		snake->direction = SNK_LEFT;
-		headpos.x -= 1;
+		snakehead.x -= 1;
 		break;
 	case SNK_CMD_RIGHT:
 		snake->direction = SNK_RIGHT;
-		headpos.x += 1;
+		snakehead.x += 1;
 		break;
 	case SNK_CMD_UP:
 		snake->direction = SNK_UP;
-		headpos.y += 1;
+		snakehead.y += 1;
 		break;
 	case SNK_CMD_DOWN:
 		snake->direction = SNK_DOWN;
-		headpos.y -= 1;
+		snakehead.y -= 1;
 		break;
 	default:
 		fprintf(stderr, "switch case default\n");
 		break;
 	}
 
-	move(snake, &headpos);
+	move(snake, &snakehead);
 
 }
 
 
-void snk_game_init() {
+void snk_game_init() {//OLD
 	srand(2);
 	gs.snk.head				= 0;
 	gs.snk.tail				= 0;
@@ -155,102 +156,8 @@ void snk_game_init() {
 	gs.food.elem_type		= ELEMENT_FOOD;
 }
 
-void test_update(Snake* snake, SNAKE_CMD cmd){
 
-	// @formatter:off
-	if(cmd == SNK_CMD_NONE){
-		switch(snake->direction){
-		case SNK_UP:	cmd = SNK_CMD_UP; break;
-		case SNK_DOWN:	cmd = SNK_CMD_DOWN; break;
-		case SNK_LEFT:	cmd = SNK_CMD_LEFT; break;
-		case SNK_RIGHT:	cmd = SNK_CMD_RIGHT; break;
-		}
-	}
-	// @formatter:on
-
-	int x = snake->parts[snake->head].pos.x;
-	int y = snake->parts[snake->head].pos.y;
-
-	Position p;
-	switch (cmd) {
-
-	case SNK_CMD_LEFT:
-		snake->direction = SNK_LEFT;
-		p.x = x - 1;
-		p.y = y;
-
-		break;
-	case SNK_CMD_RIGHT:
-		gs.snk.direction = SNK_RIGHT;
-
-
-		break;
-	case SNK_CMD_UP:
-		gs.snk.direction = SNK_UP;
-
-
-		break;
-	case SNK_CMD_DOWN:
-		gs.snk.direction = SNK_DOWN;
-
-
-		break;
-	default:
-		fprintf(stderr, "switch case default\n");
-		break;
-	}
-
-}
-
-void snk_update2(SNAKE_CMD type){
-	Element head = gs.snk.parts[gs.snk.head];
-
-
-	// @formatter:off
-	if(type == SNK_CMD_NONE){
-		switch(gs.snk.direction){
-		case SNK_UP:	type = SNK_CMD_UP; break;
-		case SNK_DOWN:	type = SNK_CMD_DOWN; break;
-		case SNK_LEFT:	type = SNK_CMD_LEFT; break;
-		case SNK_RIGHT:	type = SNK_CMD_RIGHT; break;
-		}
-	}
-	// @formatter:on
-
-	Position p;
-	switch (type) {
-
-	case SNK_CMD_LEFT:
-		gs.snk.direction = SNK_LEFT;
-		p.x = gs.snk.parts[gs.snk.head].pos.x - 1;
-
-
-		break;
-	case SNK_CMD_RIGHT:
-		gs.snk.direction = SNK_RIGHT;
-
-
-		break;
-	case SNK_CMD_UP:
-		gs.snk.direction = SNK_UP;
-
-
-		break;
-	case SNK_CMD_DOWN:
-		gs.snk.direction = SNK_DOWN;
-
-
-		break;
-	default:
-		fprintf(stderr, "switch case default\n");
-		break;
-	}
-
-
-
-}
-
-void snk_game_update(SNAKE_CMD cmd) {
+void snk_game_update(SNAKE_CMD cmd) {//OLD
 
 	// @formatter:off
 	if(cmd == SNK_CMD_NONE){
@@ -262,8 +169,6 @@ void snk_game_update(SNAKE_CMD cmd) {
 		}
 	}
 	// @formatter:on
-
-
 
 	switch (cmd) {
 
