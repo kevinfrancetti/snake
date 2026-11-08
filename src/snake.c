@@ -56,8 +56,9 @@ static bool push(Snk2 *snake, Position *newhead){
 		return true;
 	}
 	snake->head = (snake->head + 1) % SNK_MAX_LEN;
+	snake->body[snake->head] = *newhead;
 	snake->len++;
-	return false;
+	return true;
 }
 
 static bool pop(Snk2 *snake, Position *newhead){
@@ -85,7 +86,7 @@ static bool pop(Snk2 *snake, Position *newhead){
  */
 static Position move(Snk2 *snake, Position *newhead){
 	if(snake->len == 0) {
-		return (Position) {-1, -1};
+		return (Position) {-1, -1};//error pos
 	}
 
 	Position lasttail = snake->body[snake->tail];
@@ -134,7 +135,15 @@ void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
 		break;
 	}
 
-	move(snake, &snakehead);
+	if(snakehead.x == gamestate->food.pos.x && snakehead.y == gamestate->food.pos.y){
+		gamestate->food.pos.x = rand()%GAME_MAP_WIDTH;
+		gamestate->food.pos.y = rand()%GAME_MAP_HEIGHT;
+		push(&gamestate->snk2, &snakehead);
+	}else{
+		move(snake, &snakehead);
+	}
+
+
 
 }
 

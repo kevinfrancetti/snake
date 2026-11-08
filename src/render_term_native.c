@@ -13,23 +13,34 @@
 
 #include "debug.h"
 
+/*
 #define KB 1024
 #define MB (1024 * KB)
 #define GB (1024 * MB)
+*/
 
 #define CSI					"\x1b["   //Control Sequence Introducer
 #define ANSI_CLEAR			CSI "2J"
 #define ANSI_RESET			CSI "0m"
-//#define ANSI_CLEAR_SCREEN printf(CSI "2J")
+#define ANSI_CURSOR_OFF		CSI "?25l"
+#define ANSI_CURSOR_ON		CSI "?25h"
 
+#define ANSI_CURSOR_POS		CSI "%d;%dH"
+#define ANSI_FG_RGB			CSI "38;2;%d;%d;%dm"
+#define ANSI_BG_RGB			CSI "48;2;%d;%d;%dm"
+#define ANSI_CELL_FMT		ANSI_CURSOR_POS ANSI_FG_RGB ANSI_BG_RGB "%c"
 
-typedef struct {
-	char buff[256 * KB];
-	int len;
-} ScreenBuffer;
+//TODO change this shit, make a local factory of this 2 buffers
+static ScreenBuffer scrnbuff = { 0 }; //screen buffer of chars
+static NatCellBuff cellbuff = { 0 };
 
+ScreenBuffer* rtn_get_scrnbuff(){
+	return &scrnbuff;
+}
 
-static ScreenBuffer scrn_buff = { 0 }; //screen buffer of chars
+NatCellBuff* rtn_get_natcellbuff(){
+	return &cellbuff;
+}
 
 void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
@@ -41,9 +52,9 @@ void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 	cell->bg	= (NativeTermColor)		{br, bg, bb} ;
 }
 
-void rtn_draw_buff(NativeTermContext* ctx, NativeTermCell* cell){
+void rtn_draw_natcell_buff(NatCellBuff* ctx, NativeTermCell* cell){
 	if(ctx->len >= REND_NAT_MAX_CELLS){
-		DEBUG1s1i("Too big", 666);
+		DEBUG1s("FULL NATIVE CELL BUFFER");
 		return;
 	}
 	ctx->buffer[ctx->len++] = *cell;
@@ -53,26 +64,29 @@ static void render_term_native_render_buffer(char *buff, int size) {
 	write(STDOUT_FILENO, buff, size);
 }
 
-void rtn_render(NativeTermContext* ctx){
-	scrn_buff.len = 0;
+//TODO when time check if len is not greater than size, as suggested by snprintf manual.
+void rtn_render(NatCellBuff *ctx) {
+	scrnbuff.len = 0;
 	for (int i = 0; i < ctx->len; i++) {
-			NativeTermCell c = ctx->buffer[i];
+		NativeTermCell c = ctx->buffer[i];
 
-			scrn_buff.len += snprintf(scrn_buff.buff + scrn_buff.len, sizeof(scrn_buff.buff) - scrn_buff.len,
-					"\x1b[%d;%dH\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm%c", c.pos.row, c.pos.col,
-					c.fg.r, c.fg.g, c.fg.b, c.bg.r, c.bg.g, c.bg.b, c.c);
-		}
-		render_term_native_render_buffer(scrn_buff.buff, scrn_buff.len);
-		rtn_reset_screen();
+		scrnbuff.len += snprintf(scrnbuff.buff + scrnbuff.len,
+				sizeof(scrnbuff.buff) - scrnbuff.len,
+				ANSI_CELL_FMT, c.pos.row, c.pos.col, c.fg.r, c.fg.g, c.fg.b,
+				c.bg.r, c.bg.g, c.bg.b, c.c);
+
+	}
+	render_term_native_render_buffer(scrnbuff.buff, scrnbuff.len);
+	//rtn_reset_screen();
 }
 
-void rtn_reset_buffer(NativeTermContext* ctx){
+void rtn_reset_natcellbuff(NatCellBuff* ctx){
 	ctx->len = 0;
 }
 
 
 void rtn_init() {
-
+	write(STDOUT_FILENO, ANSI_CURSOR_OFF, sizeof(ANSI_CURSOR_OFF)-1);
 }
 
 void rtn_reset_screen() {
@@ -83,7 +97,9 @@ void rtn_clean_screen() {
 	write(STDOUT_FILENO, ANSI_CLEAR, sizeof(ANSI_CLEAR)-1);
 }
 
-static void render_term_native_cleanup() {
+void rtn_cleanup() {
+	rtn_reset_screen();
+	write(STDOUT_FILENO, ANSI_CURSOR_ON, sizeof(ANSI_CURSOR_ON)-1);
 	rtn_clean_screen();
 }
 

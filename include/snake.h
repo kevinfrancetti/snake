@@ -11,7 +11,7 @@
 #define GAME_MAP_WIDTH	90
 #define GAME_MAP_HEIGHT	30
 
-#define SNK_MAX_LEN		100
+#define SNK_MAX_LEN		4
 
 
 typedef enum{

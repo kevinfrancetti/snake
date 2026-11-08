@@ -28,11 +28,12 @@ all: $(TEST_INPUT_TERM) $(TEST_RENDER_TERM_NATIVE) $(TEST_RENDER_API) $(TEST_GEN
 
 
 
-INPUT_TERM_FILES	:= $(MAIN_INPUT_TERM) ../src/input_term_native.c
-RENDER_NATIVE_FILES	:= ../src/render_term_native.c
+INPUT_TERM_FILES	:= $(MAIN_INPUT_TERM) ../src/input_term_native.c ../src/debug.c
+RENDER_NATIVE_FILES	:= ../src/render_term_native.c ../src/debug.c
 RENDER_API_FILES	:= $(RENDER_NATIVE_FILES) 	\
 						../src/render_factory.c \
-						../src/render_term_binding_to_api.c 
+						../src/render_term_binding_to_api.c \
+						../src/debug.c
 
 
 
@@ -48,7 +49,7 @@ $(TEST_RENDER_API): $(MAIN_RENDER_API) $(RENDER_API_FILES)
 	gcc $(CFLAGS) -I../include $^ -o $@
 	
 	
-$(TEST_GENERIC): $(MAIN_GENERIC)
+$(TEST_GENERIC): $(MAIN_GENERIC) ../src/debug.c
 	gcc $(CFLAGS) -I../include $^ -o $@
 	
 .PHONY: clean

@@ -81,7 +81,22 @@ void move(CyclicBuff *cb, Position p){
 	cb->tail = (cb->tail + 1) % SIZE;
 }
 
+void test01(){
+	int a = 0;
+	printf("A: %d \n", 5-0%5);
+	printf("A: %d \n", 0-1%5);
+	printf("A: %d \n", 5-2%5);
+	printf("A: %d \n", 5-3%5);
+	printf("A: %d \n", 5-4%5);
+	printf("A: %d \n", 5-5%5);
+
+}
+
 int main() {
+
+	test01();
+
+	/*
 	CyclicBuff cb = create_cyclicBuff();
 	Position p = { .x = 5, .y = 1 };
 
@@ -110,5 +125,6 @@ int main() {
 	p.x = 6644;
 	move(&cb, p);
 	printf("porco dio\n");
+	*/
 	return 0;
 }

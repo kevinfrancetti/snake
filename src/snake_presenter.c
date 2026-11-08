@@ -6,6 +6,7 @@
  */
 
 #include "snake_presenter.h"
+#include "debug.h"
 
 //SP := Snake Presenter
 #define SP_RGB(red, green, blue)	{ .r = red, .g = green, .b = blue }
@@ -22,6 +23,7 @@ typedef enum{
 	CELL_HEAD,
 	CELL_BODY,
 	CELL_WALL,
+	CELL_BACKGROUND,
 	CELL_FOOD
 }PRESENTER_CELL_TYPE;
 
@@ -47,7 +49,7 @@ static void snk_pres_new_first_draw(SNK_GAME_STATE *state){
 		render->render_frame();
 }
 
-void snk_pres_new_init(RenderAPI *rend, SNK_GAME_STATE *state){
+void snk_pres_init(RenderAPI *rend, SNK_GAME_STATE *state){
 	render = rend;
 	snk_pres_new_first_draw(state);
 }
@@ -68,7 +70,11 @@ static void set_cell_style(RendAPIDrawInstructions *cell, PRESENTER_CELL_TYPE ty
 	case CELL_FOOD:
 		cell->fg = (RendAPIColorRGB ) { .r = 24, .g = 34, .b = 255 };
 		cell->bg = (RendAPIColorRGB ) { .r = 255, .g = 150, .b = 0 };
-		cell->shape = SHAPE_HASH;
+		cell->shape = SHAPE_PLUS;
+		break;
+	case CELL_BACKGROUND:
+		cell->bg = (RendAPIColorRGB ) WORLD_BG_BG;
+		cell->shape = SHAPE_VOID;
 		break;
 	}
 
@@ -76,21 +82,26 @@ static void set_cell_style(RendAPIDrawInstructions *cell, PRESENTER_CELL_TYPE ty
 
 void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	Snk2 *snake = &gamestate->snk2;
-	int head = snake->head;
-	int tail = snake->tail;
-	int len = snake->len;
+	const int head = snake->head;
+	const int tail = snake->tail;
+	const int len = snake->len;
+	//render->clean_screen();
 
 	RendAPIDrawInstructions cell;
-
-
+	cell.pos.x = gamestate->food.pos.x;
+	cell.pos.y = gamestate->food.pos.y;
+	set_cell_style(&cell, CELL_FOOD);
+	render->draw_buff(cell);
 
 	cell.pos.x = snake->body[tail].x;
 	cell.pos.y = snake->body[tail].y;
 
+	/*
 	if(len == 1){
 		set_cell_style(&cell, CELL_HEAD);
 		render->draw_buff(cell);
 	}
+	*/
 
 	for(int i = 0; i < len; i++){
 		cell.pos.x = snake->body[(tail + i)%SNK_MAX_LEN].x;
@@ -102,7 +113,16 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 		}
 		render->draw_buff(cell);
 	}
+	if(len < SNK_MAX_LEN){//TODO
+		cell.pos.x = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].x;//TODO
+		cell.pos.y = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].y;
+		DEBUG1s1i("remove x=", cell.pos.x);
+		DEBUG1s1i("remove y=", cell.pos.y);
+		set_cell_style(&cell, CELL_BACKGROUND);
+		render->draw_buff(cell);
+	}else{
 
+	}
 
 
 	render->render_frame();

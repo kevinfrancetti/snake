@@ -33,7 +33,7 @@ int main() {
 	render.clean_screen();
 
 	SNK_GAME_STATE gamestate = snk_init();//new
-	snk_pres_new_init(&render, &gamestate);//new
+	snk_pres_init(&render, &gamestate);//new
 	while (1) {
 		int ret = poll(fds, 1, 1000);
 
@@ -62,6 +62,7 @@ int main() {
 	}
 
 	//render2.cleanup();
+	render.cleanup();
 	input.restore();
 	return 0;
 }
