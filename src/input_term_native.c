@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <termios.h>
 #include "input_term_native.h"
+
+//#define	DEBUG_ON
 #include "debug.h"
 
 

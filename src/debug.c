@@ -5,9 +5,9 @@
  *      Author: bomber
  */
 
-
+//#define DEBUG_ON
 #include "debug.h"
 
-#ifdef DEBUG_ON
+//#ifdef DEBUG_ON
 int debugcounter = 0;
-#endif
+//#endif

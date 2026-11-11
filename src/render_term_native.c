@@ -66,13 +66,13 @@ ScreenBuffer rtn_create_screenbuff(){
 	return buff;
 }
 
-NatCellBuff rtn_create_cellbuff(){
-	NatCellBuff buff = { .len = 0 };
+NatFrameBuff rtn_create_cellbuff(){
+	NatFrameBuff buff = { .len = 0 };
 	return buff;
 }
 
-
-void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
+//this func is not used
+void rtn_set_cell(NatTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb){
 
@@ -82,8 +82,8 @@ void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 	cell->bg	= (NativeTermColor)		{br, bg, bb} ;
 }
 
-void rtn_push_cell_in_buff(NatCellBuff* cb, NativeTermCell* cell){
-	if(cb->len >= REND_NAT_MAX_CELLS){
+void rtn_push_cell_in_buff(NatFrameBuff* cb, NatTermCell* cell){
+	if(cb->len >= FRAME_BUFF_MAX_SIZE){
 		DEBUG1s("FULL NATIVE CELL BUFFER");
 		return;
 	}
@@ -95,10 +95,18 @@ static void render_term_native_render_buffer(char *buff, int size) {
 }
 
 //TODO when time check if len is not greater than size, as suggested by snprintf manual.
-void rtn_render2(NatCellBuff *cellbuff, ScreenBuffer *sb) {
+void rtn_render2(NatFrameBuff *fb, ScreenBuffer *sb) {
 
-	for (int i = 0; i < cellbuff->len; i++) {
-		NativeTermCell c = cellbuff->buffer[i];
+	if (fb->clear_pending) {
+		fb->clear_pending = false;
+		NativeTermColor color = fb->clear_color;
+		sb->len += snprintf(sb->buff + sb->len, sizeof(sb->buff) - sb->len,	\
+						ANSI_BG_RGB ANSI_CLEAR,								\
+						color.r, color.g, color.b);
+	}
+
+	for (int i = 0; i < fb->len; i++) {
+		NatTermCell c = fb->buffer[i];
 
 		sb->len += snprintf(sb->buff + sb->len, sizeof(sb->buff) - sb->len,
 		ANSI_CELL_FMT, c.pos.row, c.pos.col, c.fg.r, c.fg.g, c.fg.b, c.bg.r,
@@ -111,8 +119,8 @@ void rtn_render2(NatCellBuff *cellbuff, ScreenBuffer *sb) {
 }
 
 
-void rtn_reset_cellbuff(NatCellBuff* cb){
-	cb->len = 0;
+void rtn_framebuff_reset(NatFrameBuff* fb){
+	fb->len = 0;
 }
 
 
@@ -124,17 +132,11 @@ void rtn_reset_screen() {
 	write(STDOUT_FILENO, ANSI_RESET, sizeof(ANSI_RESET)-1);
 }
 
-//this function mimics the opengl style(clean the "back" buffer with a background)
-void rtn_clear_color(NatCellBuff *cb, NativeTermColor c){//ancora incompleto con errori.
-	cb->len = 0;
-	NativeTermCell cell = { .bg = c };
-	for(int i = 0; i < REND_NAT_MAX_CELLS; i++){
-		rtn_push_cell_in_buff(cb, &cell);
-	}
-}
 
-void rtn_clean_screen2(ScreenBuffer *sb){
-	sb->len += snprintf(sb->buff + sb->len, sizeof(sb->buff) - sb->len, ANSI_CLEAR);
+void rtn_clear_color(NatFrameBuff *fb, NativeTermColor c){
+	fb->clear_pending = true;
+	fb->clear_color = c;
+	fb->len = 0;
 }
 
 void rtn_clean_screen() {

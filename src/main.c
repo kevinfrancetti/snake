@@ -13,7 +13,7 @@
 #include "input_api.h"
 #include "input_factory.h"
 
-//#define DEBUG_ON
+#define DEBUG_ON
 #include "debug.h"
 
 int main() {

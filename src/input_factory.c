@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include "input_factory.h"
 #include "input_term_binding_to_api.h"
+
+//#define DEBUG_ON
 #include "debug.h"
 
 

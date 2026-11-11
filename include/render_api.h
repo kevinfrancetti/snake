@@ -43,6 +43,7 @@ typedef struct {
     void (*render_frame)(void);  // aggiorna lo schermo
     void (*cleanup)(void);
     void (*clean_screen)(void);
+    void (*clear_color)(RendAPIColorRGB);
 } RenderAPI;
 
 

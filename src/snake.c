@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "snake.h"
+
+#define DEBUG_ON
 #include "debug.h"
 
 SNK_GAME_STATE snk_init() {
@@ -134,6 +136,9 @@ void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
 		fprintf(stderr, "switch case default\n");
 		break;
 	}
+
+	DEBUG1s1i("snk x=%d ", snakehead.x);
+	DEBUG1s1i("snk y=%d ", snakehead.y);
 
 	if(snakehead.x == gamestate->food.pos.x && snakehead.y == gamestate->food.pos.y){
 		gamestate->food.pos.x = rand()%GAME_MAP_WIDTH;

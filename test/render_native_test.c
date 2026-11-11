@@ -32,22 +32,22 @@ int main() {
 
 	printf("hi\n");
 	*/
-	NatCellBuff ctx =  { 0 };
+	NatFrameBuff ctx =  { 0 };
 	ScreenBuffer scrnbuff = { 0 };
-	NativeTermCell cell;
+	NatTermCell cell;
 
 
 	rtn_set_cell(&cell, 'R', 14, 15, 163, 200, 100, 240, 255, 100);
 	rtn_push_cell_in_buff(&ctx, &cell);
 	rtn_render2(&ctx, &scrnbuff);
-	rtn_reset_cellbuff(&ctx);
+	rtn_framebuff_reset(&ctx);
 	rtn_set_cell(&cell, 'R', 4, 6, 100, 100, 0, 0, 0, 255);
 	rtn_push_cell_in_buff(&ctx, &cell);
 	rtn_render2(&ctx, &scrnbuff);
 
 	srand(1);
 
-	rtn_reset_cellbuff(&ctx);
+	rtn_framebuff_reset(&ctx);
 	for (int i = 0; i < 30; i++) {
 		for (int j = 0; j < 90; j++) {
 			rtn_set_cell(&cell, 33+rand()%94 ,i , j, rand()%256, rand()%256, rand()%256, rand()%256, rand()%256, rand()%256);

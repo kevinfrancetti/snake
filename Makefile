@@ -16,7 +16,7 @@ INCLUDE_DIR := include
 
 #Compiler flags
 INCLUDES := -I$(INCLUDE_DIR) 
-CFLAGS := -Wall -Wextra -D DEBUG_ON -MMD $(INCLUDES) -g -c
+CFLAGS := -Wall -Wextra -MMD $(INCLUDES) -g -c #if you want global debug active add: -D DEBUG_ON
 
 #Linker flags
 LDLIBS := 
@@ -56,7 +56,7 @@ $(BUILD_OBJ_DIR) $(SRC_DIR) $(INCLUDE_DIR):
 
 .PHONY: clean
 clean:
-	rm  $(objs) $(STATIC_LIB_NAME) $(deps) $(PROGRAM_NAME) test/maintest maintest.o
+	rm  $(objs) $(STATIC_LIB_NAME) $(deps) $(PROGRAM_NAME)
 	
 	
 print:

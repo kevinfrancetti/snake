@@ -6,6 +6,7 @@
  */
 
 #include "snake_presenter.h"
+#define DEBUG_ON
 #include "debug.h"
 
 //SP := Snake Presenter
@@ -80,12 +81,29 @@ static void set_cell_style(RendAPIDrawInstructions *cell, PRESENTER_CELL_TYPE ty
 
 }
 
+/**
+ * This code clears the last piece of tail from the screen
+ * this is used if don't want to use the clear of the render
+ * don't use it together with render->clear_color
+ */
+static snk_clear_old_tail(Snk2 *snake){
+	if(snake->len < SNK_MAX_LEN){
+		RendAPIDrawInstructions cell;
+		cell.pos.x = snake->body[(snake->tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].x;//TODO
+		cell.pos.y = snake->body[(snake->tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].y;
+		DEBUG1s1i("remove x=", cell.pos.x);
+		DEBUG1s1i("remove y=", cell.pos.y);
+		set_cell_style(&cell, CELL_BACKGROUND);
+		render->draw_buff(cell);
+	}
+}
+
 void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	Snk2 *snake = &gamestate->snk2;
 	const int head = snake->head;
 	const int tail = snake->tail;
 	const int len = snake->len;
-	render->clean_screen();
+	//render->clear_color( (RendAPIColorRGB) WORLD_BG_BG);
 
 	RendAPIDrawInstructions cell;
 	cell.pos.x = gamestate->food.pos.x;
@@ -93,24 +111,8 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	set_cell_style(&cell, CELL_FOOD);
 	render->draw_buff(cell);
 
-	//cell.pos.x = snake->body[tail].x;
-	//cell.pos.y = snake->body[tail].y;
 
-	/*
-	if(len == 1){
-		set_cell_style(&cell, CELL_HEAD);
-		render->draw_buff(cell);
-	}
-	*/
-	if(len < SNK_MAX_LEN){//TODO
-		cell.pos.x = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].x;//TODO
-		cell.pos.y = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].y;
-		DEBUG1s1i("remove x=", cell.pos.x);
-		DEBUG1s1i("remove y=", cell.pos.y);
-		set_cell_style(&cell, CELL_BACKGROUND);
-		render->draw_buff(cell);
-	}
-
+	snk_clear_old_tail(snake);
 	for(int i = 0; i < len; i++){
 		cell.pos.x = snake->body[(tail + i)%SNK_MAX_LEN].x;
 		cell.pos.y = snake->body[(tail + i)%SNK_MAX_LEN].y;
