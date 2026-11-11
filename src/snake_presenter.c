@@ -64,7 +64,7 @@ static void set_cell_style(RendAPIDrawInstructions *cell, PRESENTER_CELL_TYPE ty
 		break;
 	case CELL_BODY:
 		cell->fg = (RendAPIColorRGB ) { .r = 24, .g = 34, .b = 255 };
-		cell->bg = (RendAPIColorRGB ) { .r = 255, .g = 150, .b = 0 };
+		cell->bg = (RendAPIColorRGB ) { .r = 255, .g = 0, .b = 255 };
 		cell->shape = SHAPE_HASH;
 		break;
 	case CELL_FOOD:
@@ -85,7 +85,7 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	const int head = snake->head;
 	const int tail = snake->tail;
 	const int len = snake->len;
-	//render->clean_screen();
+	render->clean_screen();
 
 	RendAPIDrawInstructions cell;
 	cell.pos.x = gamestate->food.pos.x;
@@ -93,8 +93,8 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 	set_cell_style(&cell, CELL_FOOD);
 	render->draw_buff(cell);
 
-	cell.pos.x = snake->body[tail].x;
-	cell.pos.y = snake->body[tail].y;
+	//cell.pos.x = snake->body[tail].x;
+	//cell.pos.y = snake->body[tail].y;
 
 	/*
 	if(len == 1){
@@ -102,6 +102,14 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 		render->draw_buff(cell);
 	}
 	*/
+	if(len < SNK_MAX_LEN){//TODO
+		cell.pos.x = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].x;//TODO
+		cell.pos.y = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].y;
+		DEBUG1s1i("remove x=", cell.pos.x);
+		DEBUG1s1i("remove y=", cell.pos.y);
+		set_cell_style(&cell, CELL_BACKGROUND);
+		render->draw_buff(cell);
+	}
 
 	for(int i = 0; i < len; i++){
 		cell.pos.x = snake->body[(tail + i)%SNK_MAX_LEN].x;
@@ -113,16 +121,7 @@ void snk_pres_rend(SNK_GAME_STATE *gamestate){//new
 		}
 		render->draw_buff(cell);
 	}
-	if(len < SNK_MAX_LEN){//TODO
-		cell.pos.x = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].x;//TODO
-		cell.pos.y = snake->body[(tail + SNK_MAX_LEN - 1) % SNK_MAX_LEN].y;
-		DEBUG1s1i("remove x=", cell.pos.x);
-		DEBUG1s1i("remove y=", cell.pos.y);
-		set_cell_style(&cell, CELL_BACKGROUND);
-		render->draw_buff(cell);
-	}else{
 
-	}
 
 
 	render->render_frame();

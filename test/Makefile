@@ -4,7 +4,7 @@ MAKEFLAGS += --no-builtin-rules
 
 #NO DEBS IN THIS MAKEFILE, IM LAZY, REMEMBER .h ARE NOT UPDATED AUTOMATICALY
 
-CFLAGS := -Wall -g -D DEBUG_ON
+CFLAGS := -Wall -Wextra -g -D DEBUG_ON
 
 #output file names
 TEST_INPUT_TERM			:= test_input

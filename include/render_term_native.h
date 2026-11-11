@@ -48,16 +48,20 @@ typedef struct {
 
 //rtn := render term native
 void rtn_init(void);
-ScreenBuffer* rtn_get_scrnbuff(void);
-NatCellBuff* rtn_get_natcellbuff(void);
+ScreenBuffer* rtn_get_scrnbuff(void);//remove
+NatCellBuff* rtn_get_natcellbuff(void);//remove
+ScreenBuffer rtn_create_screenbuff(void);
+NatCellBuff rtn_create_cellbuff(void);
 void rtn_clean_screen(void);
+void rtn_clean_screen2(ScreenBuffer*);
 void rtn_cleanup(void);
-void rtn_draw_natcell_buff(NatCellBuff* ctx, NativeTermCell* cell);
-void rtn_render(NatCellBuff* ctx);
+void rtn_push_cell_in_buff(NatCellBuff* ctx, NativeTermCell* cell);
+void rtn_render(NatCellBuff* ctx);//remove
+void rtn_render2(NatCellBuff *cellbuff, ScreenBuffer *scrnbuff);
 void rtn_set_cell(NativeTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb);
-void rtn_reset_natcellbuff(NatCellBuff* ctx);
+void rtn_reset_cellbuff(NatCellBuff* ctx);
 void rtn_reset_screen(void);
 
 #endif /* INCLUDE_RENDER_TERM_NATIVE_H_ */
