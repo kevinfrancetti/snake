@@ -54,12 +54,12 @@ typedef struct{
 	int				tail;
 	SNK_DIRECTION	direction;
 	ELEMENT_TYPE	type;
-}Snk2;
+}Snake;
 
 typedef struct{
 	int				width;
 	int				height;
-	Snk2			snk2;
+	Snake			snk;
 	//Element			map_of_stuff[100];
 	Element			food;
 }SNK_GAME_STATE;

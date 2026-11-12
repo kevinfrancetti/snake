@@ -13,7 +13,7 @@
 #include <stdbool.h>
 #include "snake.h"
 
-#define DEBUG_ON
+//#define DEBUG_ON
 #include "debug.h"
 
 SNK_GAME_STATE snk_init() {
@@ -22,7 +22,7 @@ SNK_GAME_STATE snk_init() {
 	SNK_GAME_STATE gamestate = {
 			.width	= GAME_MAP_WIDTH,
 			.height	= GAME_MAP_HEIGHT,
-			.snk2	= {
+			.snk	= {
 					.body[0].x = 6,
 					.body[0].y = 6,
 					.head	= 0,
@@ -47,7 +47,7 @@ SNK_GAME_STATE snk_init() {
 /**
  * Snake ate something
  */
-static bool push(Snk2 *snake, Position *newhead){
+static bool push(Snake *snake, Position *newhead){
 	if(snake->len >= SNK_MAX_LEN){
 		DEBUG1s1i("snake buff full", 0);
 		return false;
@@ -63,7 +63,7 @@ static bool push(Snk2 *snake, Position *newhead){
 	return true;
 }
 
-static bool pop(Snk2 *snake, Position *newhead){
+static bool pop(Snake *snake, Position *newhead){
 	if(snake->len == 0){
 		DEBUG1s1i("snake buff empty", 0);
 		return false;
@@ -86,7 +86,7 @@ static bool pop(Snk2 *snake, Position *newhead){
  * For the presenter:
  * return the last position so it's easy for the presenter to remove the cell
  */
-static Position move(Snk2 *snake, Position *newhead){
+static Position move(Snake *snake, Position *newhead){
 	if(snake->len == 0) {
 		return (Position) {-1, -1};//error pos
 	}
@@ -99,7 +99,7 @@ static Position move(Snk2 *snake, Position *newhead){
 }
 
 void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
-	Snk2 *snake = &gamestate->snk2;
+	Snake *snake = &gamestate->snk;
 
 	// @formatter:off
 	if(cmd == SNK_CMD_NONE){
@@ -143,7 +143,7 @@ void snk_update(SNK_GAME_STATE *gamestate, SNAKE_CMD cmd){
 	if(snakehead.x == gamestate->food.pos.x && snakehead.y == gamestate->food.pos.y){
 		gamestate->food.pos.x = rand()%GAME_MAP_WIDTH;
 		gamestate->food.pos.y = rand()%GAME_MAP_HEIGHT;
-		push(&gamestate->snk2, &snakehead);
+		push(&gamestate->snk, &snakehead);
 	}else{
 		move(snake, &snakehead);
 	}

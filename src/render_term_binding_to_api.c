@@ -22,7 +22,7 @@ const char render_term_bindings_to_api[] = {
 //static ScreenBuffer	*p_scrnbuff;
 //static NatCellBuff	*p_natcellbuff;
 
-static ScreenBuffer	screnbuff;
+static NatScreenBuffer	screnbuff;
 static NatFrameBuff	framebuff;
 
 static void rtb_init(){
@@ -48,12 +48,12 @@ static void rtb_api_cell_to_native_cell_and_push_in_buffer(RendAPIDrawInstructio
 
 
 static void rtb_render2(){
-	rtn_render2(&framebuff, &screnbuff);
+	rtn_render(&framebuff, &screnbuff);
 	rtn_framebuff_reset(&framebuff);//TODO check it if works
 }
 
 static void rtb_clear_color(RendAPIColorRGB apirgb){
-	NativeTermColor natrgb = {.r = apirgb.r, .g = apirgb.g, .b = apirgb.b};
+	NatTermColor natrgb = {.r = apirgb.r, .g = apirgb.g, .b = apirgb.b};
 	rtn_clear_color(&framebuff, natrgb);
 }
 
@@ -61,10 +61,10 @@ RenderAPI render_term_binding_create_api(){
 	RenderAPI api = {
 			.init			= rtb_init,
 			.draw_buff		= rtb_api_cell_to_native_cell_and_push_in_buffer,
+			.clear_color	= rtb_clear_color,
 			.render_frame	= rtb_render2,
-			.clean_screen	= rtn_clean_screen,
-			.cleanup		= rtn_cleanup,
-			.clear_color	= rtb_clear_color
+			.clean_screen	= rtn_screen_clean_now,
+			.cleanup		= rtn_cleanup
 	};
 	return api;
 }

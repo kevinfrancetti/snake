@@ -28,17 +28,17 @@ typedef struct {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
-} NativeTermColor;
+} NatTermColor;
 
 typedef struct {
 	int row;
 	int col;
-} NativeTermCursorPos;
+} NatTermCursorPos;
 
 typedef struct {
-	NativeTermCursorPos pos;
-	NativeTermColor fg;
-	NativeTermColor bg;
+	NatTermCursorPos pos;
+	NatTermColor fg;
+	NatTermColor bg;
 	char c;
 } NatTermCell;
 
@@ -46,31 +46,28 @@ typedef struct {
 	NatTermCell buffer[FRAME_BUFF_MAX_SIZE];
 	int len; //number of elements already in the buffer
 	bool clear_pending;
-	NativeTermColor clear_color;
+	NatTermColor clear_color;
 } NatFrameBuff;
 
 typedef struct {
 	char buff[SCREEN_BUFF_MAX_SIZE];
 	int len;
-} ScreenBuffer;
+} NatScreenBuffer;
 
 
 void rtn_init(void);
-ScreenBuffer* rtn_get_scrnbuff(void);//remove
-NatFrameBuff* rtn_get_natcellbuff(void);//remove
-ScreenBuffer rtn_create_screenbuff(void);
+NatScreenBuffer rtn_create_screenbuff(void);
 NatFrameBuff rtn_create_cellbuff(void);
-void rtn_clean_screen(void);
-void rtn_clean_screen2(ScreenBuffer*);
-void rtn_cleanup(void);
-void rtn_clear_color(NatFrameBuff *fb, NativeTermColor c);
 void rtn_push_cell_in_buff(NatFrameBuff* ctx, NatTermCell* cell);
-void rtn_render(NatFrameBuff* ctx);//remove
-void rtn_render2(NatFrameBuff *cellbuff, ScreenBuffer *scrnbuff);
+void rtn_render(NatFrameBuff *cellbuff, NatScreenBuffer *scrnbuff);
 void rtn_set_cell(NatTermCell* cell, char c, int row, int col, \
 					uint8_t fr, uint8_t fg, uint8_t fb, \
 					uint8_t br, uint8_t bg, uint8_t bb);
+void rtn_clear_color(NatFrameBuff *fb, NatTermColor c);
 void rtn_framebuff_reset(NatFrameBuff* ctx);
-void rtn_reset_screen(void);
+
+void rtn_screen_clean_now(void);
+void rtn_screen_reset_now(void);
+void rtn_cleanup(void);
 
 #endif /* INCLUDE_RENDER_TERM_NATIVE_H_ */

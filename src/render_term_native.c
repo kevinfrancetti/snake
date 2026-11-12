@@ -61,8 +61,12 @@ void rtn_render(NatCellBuff *ctx) {
 
 */
 
-ScreenBuffer rtn_create_screenbuff(){
-	ScreenBuffer buff = {.len = 0};
+void rtn_init() {
+	write(STDOUT_FILENO, ANSI_CURSOR_OFF, sizeof(ANSI_CURSOR_OFF)-1);
+}
+
+NatScreenBuffer rtn_create_screenbuff(){
+	NatScreenBuffer buff = {.len = 0};
 	return buff;
 }
 
@@ -77,17 +81,17 @@ void rtn_set_cell(NatTermCell* cell, char c, int row, int col, \
 					uint8_t br, uint8_t bg, uint8_t bb){
 
 	cell->c		= c;
-	cell->pos	= (NativeTermCursorPos)	{row, col};
-	cell->fg	= (NativeTermColor)		{fr, fg, fb} ;
-	cell->bg	= (NativeTermColor)		{br, bg, bb} ;
+	cell->pos	= (NatTermCursorPos)	{row, col};
+	cell->fg	= (NatTermColor)		{fr, fg, fb} ;
+	cell->bg	= (NatTermColor)		{br, bg, bb} ;
 }
 
-void rtn_push_cell_in_buff(NatFrameBuff* cb, NatTermCell* cell){
-	if(cb->len >= FRAME_BUFF_MAX_SIZE){
+void rtn_push_cell_in_buff(NatFrameBuff* fb, NatTermCell* cell){
+	if(fb->len >= FRAME_BUFF_MAX_SIZE){
 		DEBUG1s("FULL NATIVE CELL BUFFER");
 		return;
 	}
-	cb->buffer[cb->len++] = *cell;
+	fb->buffer[fb->len++] = *cell;
 }
 
 static void render_term_native_render_buffer(char *buff, int size) {
@@ -95,14 +99,13 @@ static void render_term_native_render_buffer(char *buff, int size) {
 }
 
 //TODO when time check if len is not greater than size, as suggested by snprintf manual.
-void rtn_render2(NatFrameBuff *fb, ScreenBuffer *sb) {
+void rtn_render(NatFrameBuff *fb, NatScreenBuffer *sb) {
 
 	if (fb->clear_pending) {
 		fb->clear_pending = false;
-		NativeTermColor color = fb->clear_color;
+		NatTermColor color = fb->clear_color;
 		sb->len += snprintf(sb->buff + sb->len, sizeof(sb->buff) - sb->len,	\
-						ANSI_BG_RGB ANSI_CLEAR,								\
-						color.r, color.g, color.b);
+						ANSI_BG_RGB ANSI_CLEAR, color.r, color.g, color.b);
 	}
 
 	for (int i = 0; i < fb->len; i++) {
@@ -123,29 +126,26 @@ void rtn_framebuff_reset(NatFrameBuff* fb){
 	fb->len = 0;
 }
 
-
-void rtn_init() {
-	write(STDOUT_FILENO, ANSI_CURSOR_OFF, sizeof(ANSI_CURSOR_OFF)-1);
-}
-
-void rtn_reset_screen() {
-	write(STDOUT_FILENO, ANSI_RESET, sizeof(ANSI_RESET)-1);
-}
-
-
-void rtn_clear_color(NatFrameBuff *fb, NativeTermColor c){
+void rtn_clear_color(NatFrameBuff *fb, NatTermColor c){
 	fb->clear_pending = true;
 	fb->clear_color = c;
 	fb->len = 0;
 }
 
-void rtn_clean_screen() {
+
+
+void rtn_screen_reset_now() {
+	write(STDOUT_FILENO, ANSI_RESET, sizeof(ANSI_RESET)-1);
+}
+
+
+void rtn_screen_clean_now() {
 	write(STDOUT_FILENO, ANSI_CLEAR, sizeof(ANSI_CLEAR)-1);
 }
 
 void rtn_cleanup() {
-	rtn_reset_screen();
+	rtn_screen_reset_now();
 	write(STDOUT_FILENO, ANSI_CURSOR_ON, sizeof(ANSI_CURSOR_ON)-1);
-	rtn_clean_screen();
+	rtn_screen_clean_now();
 }
 

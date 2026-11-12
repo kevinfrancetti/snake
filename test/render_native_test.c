@@ -33,17 +33,17 @@ int main() {
 	printf("hi\n");
 	*/
 	NatFrameBuff ctx =  { 0 };
-	ScreenBuffer scrnbuff = { 0 };
+	NatScreenBuffer scrnbuff = { 0 };
 	NatTermCell cell;
 
 
 	rtn_set_cell(&cell, 'R', 14, 15, 163, 200, 100, 240, 255, 100);
 	rtn_push_cell_in_buff(&ctx, &cell);
-	rtn_render2(&ctx, &scrnbuff);
+	rtn_render(&ctx, &scrnbuff);
 	rtn_framebuff_reset(&ctx);
 	rtn_set_cell(&cell, 'R', 4, 6, 100, 100, 0, 0, 0, 255);
 	rtn_push_cell_in_buff(&ctx, &cell);
-	rtn_render2(&ctx, &scrnbuff);
+	rtn_render(&ctx, &scrnbuff);
 
 	srand(1);
 
@@ -54,7 +54,7 @@ int main() {
 			rtn_push_cell_in_buff(&ctx, &cell);
 		}
 	}
-	rtn_render2(&ctx, &scrnbuff);
+	rtn_render(&ctx, &scrnbuff);
 
 	/*
 	 *
