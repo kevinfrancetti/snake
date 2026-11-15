@@ -12,4 +12,5 @@ test/*
 !test/*.h
 !test/Makefile
 !test/Makefile.old
+.stignore
 
