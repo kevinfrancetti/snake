@@ -89,12 +89,22 @@ void test01(){
 	printf("A: %d \n", 5-3%5);
 	printf("A: %d \n", 5-4%5);
 	printf("A: %d \n", 5-5%5);
+}
+
+void test02(){
+	int *array1[3];//array of 3 pointers to integer
+	int* (*array2)[3]; //pointer to array of 3 pointer to integers
+	int a = 5;
+	array1[0] = &a;
+	array2 = &array1;
+	printf("%d\n", *((*array2)[0]) );
+
 
 }
 
 int main() {
 
-	test01();
+	test02();
 
 	/*
 	CyclicBuff cb = create_cyclicBuff();

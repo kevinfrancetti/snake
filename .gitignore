@@ -7,4 +7,9 @@ build
 Doxfile2
 Doxyfile
 docs/
+test/*
+!test/*.c
+!test/*.h
+!test/Makefile
+!test/Makefile.old
 
