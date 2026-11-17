@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "debug.h"
 
 #define SIZE 4
@@ -98,13 +99,21 @@ void test02(){
 	array1[0] = &a;
 	array2 = &array1;
 	printf("%d\n", *((*array2)[0]) );
+}
 
-
+void test03(){
+	printf("int = %ld\n", sizeof(int));
+	printf("uint16 = %ld\n", sizeof(uint16_t));
+	printf("uint32 = %ld\n", sizeof(uint32_t));
+	printf("int32 = %ld\n", sizeof(int32_t));
+	printf("unsigned int = %ld\n", sizeof(unsigned int));
+	printf("size_t = %ld\n", sizeof(size_t));
+	printf("void* = %ld\n", sizeof(void*));
 }
 
 int main() {
 
-	test02();
+	test03();
 
 	/*
 	CyclicBuff cb = create_cyclicBuff();

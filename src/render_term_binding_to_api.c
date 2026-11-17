@@ -34,7 +34,7 @@ static void rtb_init(){
 static void rtb_api_cell_to_native_cell_and_push_in_buffer(RendAPIDrawInstructions api){//TODO testing
 	NatTermCell cell = {
 			.pos.row	= NATIVE_SCREEN_HEIGHT - api.pos.y,
-			.pos.col	= api.pos.x,
+			.pos.col	= api.pos.x + 1,
 			.fg.r		= api.fg.r,
 			.fg.g		= api.fg.g,
 			.fg.b		= api.fg.b,
