@@ -41,7 +41,7 @@ static void rtb_api_cell_to_native_cell_and_push_in_buffer(RendAPIDrawInstructio
 			.bg.r		= api.bg.r,
 			.bg.g		= api.bg.g,
 			.bg.b		= api.bg.b,
-			.c			= render_term_bindings_to_api[api.shape]
+			.c			= render_term_bindings_to_api[api.shape]//TODO seg fault here if shape bad init
 	};
 	rtn_push_cell_in_buff(&framebuff, &cell);
 }
