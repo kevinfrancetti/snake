@@ -15,93 +15,118 @@
 
 #define BUF_SIZE	2
 
-
 /*
-RendAPIDrawInstructions g_cells1[BUF_SIZE];
-RendAPIDrawInstructions g_cells2[BUF_SIZE];
-RendAPIDrawInstructions *g_ptr_cells;
+ RendAPIDrawInstructions g_cells1[BUF_SIZE];
+ RendAPIDrawInstructions g_cells2[BUF_SIZE];
+ RendAPIDrawInstructions *g_ptr_cells;
 
-void init_cells(RendAPIDrawInstructions *cells, int size) {
-	for (int i = 0; i < size; i++) {
-		(cells + i)->pos.x = i;
-		(cells + i)->pos.y = 5;
-		(cells + i)->bg = (RendAPIColorRGB ) { .r = 0, .g = 0, .b = 255 };
-	}
-}
+ void init_cells(RendAPIDrawInstructions *cells, int size) {
+ for (int i = 0; i < size; i++) {
+ (cells + i)->pos.x = i;
+ (cells + i)->pos.y = 5;
+ (cells + i)->bg = (RendAPIColorRGB ) { .r = 0, .g = 0, .b = 255 };
+ }
+ }
 
-void rend_cells(RenderAPI *render, RendAPIDrawInstructions *cells, int size) {
-	for (int i = 0; i < size; i++) {
-		render->draw_buff(cells[i]);
-	}
-	render->render_frame();
-}
+ void rend_cells(RenderAPI *render, RendAPIDrawInstructions *cells, int size) {
+ for (int i = 0; i < size; i++) {
+ render->draw_buff(cells[i]);
+ }
+ render->render_frame();
+ }
 
-void update_cells() {
+ void update_cells() {
 
-}
-*/
+ }
+ */
 
 typedef uint32_t Entity;
 
-
 #define NUM_CREATURES 10
 
-typedef enum{
-	DEAD,
-	ALIVE
-}CREATURE_STATE;
 
 
-void init_creatures(CREATURE_STATE *creatures, int size){
-	for(int i = 0; i < size; i++){
-		creatures[i] = DEAD;
-	}
+
+typedef enum {
+	DEAD, ALIVE
+} State;
+
+typedef struct {
+	State buf1[NUM_CREATURES];
+	State buf2[NUM_CREATURES];
+	State *states;
+} CA; //CA:=Cellular Automata
+
+void rule1(const State *cells, int size, int index) {
+	State l = cells[(index + size - 1) % size];
+	State r = cells[(index + 1) % size];
+
+
 }
 
-void print_creatues(CREATURE_STATE *creatures, int size){
-	for(int i = 0; i < size; i++){
+void init_creatures(CA *ca, int size) {
+	ca->states = ca->buf1;
+	for (int i = 0; i < size; i++) {
+		ca->states[i] = DEAD;
+	}
+	ca->states[0] = ALIVE;
+	ca->states[2] = ALIVE;
+}
 
-		if(creatures[i] == DEAD){
+void print_creatues(CA *ca, int size) {
+	for (int i = 0; i < size; i++) {
+
+		if (ca->states[i] == DEAD) {
 			printf("D,");
-		}else printf("A,");
+		} else
+			printf("A,");
 
 	}
 	printf("\n");
 }
 
+void update_creatures(CA *state, int size) {
+	State *new;
+	if (state->states != state->buf1) {
+		new = state->buf1;
+	} else
+		new = state->buf2;
 
+	for (int i = 0; i < size; i++) {
+		new[i] = state->states[(i + size - 1) % size]; //prev creature
+	}
 
-typedef struct{
+	state->states = new;
+
+}
+
+//SORTING TEST
+typedef struct {
 	int swap_cnt;
 	int index;
-}BubbleSortState;
+} BubbleSortState;
 
-bool atomic_bubble_sort(BubbleSortState *self, int *array, int size){
-
-	if(array[self->index] > array[self->index + 1]) {
+bool atomic_bubble_sort(BubbleSortState *self, int *array, int size) {
+	if (array[self->index] > array[self->index + 1]) {
 		self->swap_cnt++;
 		int tmp = array[self->index];
 		array[self->index] = array[self->index + 1];
 		array[self->index + 1] = tmp;
 	}
 	self->index++;
-
-	if(self->index == size - 1){
-		if(self->swap_cnt == 0){
+	if (self->index == size - 1) {
+		if (self->swap_cnt == 0) {
 			self->index = 0;
 			self->swap_cnt = 0;
 			return true;
-		}else{
+		} else {
 			self->index = 0;
 			self->swap_cnt = 0;
 			return false;
 		}
 	}
-
 	return false;
-
 }
-
 
 bool bubble_sort(int *array, int size, bool stepbystep) {
 	int swap_cnt = 0;
@@ -129,16 +154,16 @@ void print_array(int *array, int size) {
 	printf("\n");
 }
 
-void render_array(RenderAPI *render, int *array, int size){
+void render_array(RenderAPI *render, int *array, int size) {
 	static int cnt = 0;
 	RendAPIDrawInstructions cell;
 	//cnt++;
 	cell.pos.y = 5;
-	cell.fg = (RendAPIColorRGB) {0,0,0};
-	cell.bg = (RendAPIColorRGB) {0,0,0};
+	cell.fg = (RendAPIColorRGB ) { 0, 0, 0 };
+	cell.bg = (RendAPIColorRGB ) { 0, 0, 0 };
 	cell.shape = SHAPE_CIRCLE; //TODO seg fault investigate
 	int step = (255 / (size - 1));
-	for(int i = 0; i < size; i++){
+	for (int i = 0; i < size; i++) {
 		cell.bg.r = step * array[i];
 		cell.bg.g = 255 - (step * array[i]);
 		cell.pos.x = i;
@@ -146,33 +171,36 @@ void render_array(RenderAPI *render, int *array, int size){
 	}
 	render->render_frame();
 }
-
+//END SORTING TEST
 
 typedef int (*ptr_fn)(void);
 
 ptr_fn (*f)(int);
 
-int func1(void){
+int func1(void) {
 	return 0;
 }
 
-ptr_fn func2(int a){
+ptr_fn func2(int a) {
 	printf("this is func: %d\n", a);
 	return func1;
 }
-
-
-
-
 
 int main() {
 	f = func2;
 	int test = (*f)(7)();
 	printf("test: %d\n", test);
-	CREATURE_STATE creatures[NUM_CREATURES];
-	init_creatures(creatures, NUM_CREATURES);
-	print_creatues(creatures, NUM_CREATURES);
-
+	CA state[NUM_CREATURES];
+	init_creatures(state, NUM_CREATURES);
+	print_creatues(state, NUM_CREATURES);
+	update_creatures(state, NUM_CREATURES);
+	print_creatues(state, NUM_CREATURES);
+	int i = 0;
+	do {
+		update_creatures(state, NUM_CREATURES);
+		print_creatues(state, NUM_CREATURES);
+		usleep(1000 * 1000);
+	} while (i++ < 10);
 
 	/*
 	 RenderAPI render = render_create(RENDER_TERMINAL);
@@ -212,7 +240,7 @@ int main() {
 	return 0;
 }
 
-void test_bubble_sort_and_render(){
+void test_bubble_sort_and_render() {
 	srand(135);
 	int size = 40;
 	int array1[size];
@@ -223,19 +251,19 @@ void test_bubble_sort_and_render(){
 		array1[i] = rand() % size;
 	}
 
-	BubbleSortState state = {0,0};
+	BubbleSortState state = { 0, 0 };
 
 	do {
-	//	print_array(array1, size);
+		//	print_array(array1, size);
 		render_array(&render, array1, size);
 		usleep(1000 * 10);
 	} while (!atomic_bubble_sort(&state, array1, size));
 
 	/*
-	do {
-		print_array(array1, size);
-	} while (!bubble_sort(array1, size, true));
-	*/
+	 do {
+	 print_array(array1, size);
+	 } while (!bubble_sort(array1, size, true));
+	 */
 
 }
 
