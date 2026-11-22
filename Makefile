@@ -16,7 +16,7 @@ INCLUDE_DIR := include
 
 #Compiler flags
 INCLUDES := -I$(INCLUDE_DIR) 
-CFLAGS := -std=gnu17 -Wall -Wextra -MMD $(INCLUDES) -g -c #if you want global debug active add: -D DEBUG_ON
+CFLAGS := -std=gnu17 -Wall -Wextra -Wconversion -MMD $(INCLUDES) -g -c #if you want global debug active add: -D DEBUG_ON
 
 #Linker flags
 LDLIBS := 

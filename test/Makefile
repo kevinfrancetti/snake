@@ -4,7 +4,7 @@ MAKEFLAGS += --no-builtin-rules
 
 #NO DEBS IN THIS MAKEFILE, IM LAZY, REMEMBER .h ARE NOT UPDATED AUTOMATICALY
 
-CFLAGS := -std=gnu17 -Wall -Wextra -g #-D DEBUG_ON
+CFLAGS := -std=gnu17 -Wall -Wextra -Wconversion -g #-D DEBUG_ON
 
 #output file names
 TEST_INPUT_TERM			:= test_input
@@ -33,7 +33,8 @@ RENDER_NATIVE_FILES	:= ../src/render_term_native.c ../src/debug.c
 RENDER_API_FILES	:= $(RENDER_NATIVE_FILES) 	\
 						../src/render_factory.c \
 						../src/render_term_binding_to_api.c \
-						../src/debug.c
+						../src/debug.c \
+						sort_test.c
 
 
 
